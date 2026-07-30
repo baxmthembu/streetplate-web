@@ -1,0 +1,126 @@
+export type Vendor = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  neighbourhood: string;
+  rating: number;
+  reviewCount: number;
+  deliveryFee: number;
+  eta: [number, number];
+  isOpen: boolean;
+  accent: string;
+  promoted?: boolean;
+};
+
+export type Meal = {
+  id: string;
+  vendorSlug: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  accent: string;
+  symbol: string;
+};
+
+// Clearly labelled design fixtures. Production screens replace these through
+// src/lib/streetplate-api.ts when STREETPLATE_API_URL is configured.
+export const demoVendors: Vendor[] = [
+  {
+    id: "demo-vendor-1",
+    slug: "soweto-kota-corner",
+    name: "Soweto Kota Corner",
+    description: "Generous kotas made fresh with local favourites.",
+    category: "Kota",
+    neighbourhood: "Orlando West",
+    rating: 4.8,
+    reviewCount: 0,
+    deliveryFee: 14,
+    eta: [25, 35],
+    isOpen: true,
+    accent: "coral",
+    promoted: true,
+  },
+  {
+    id: "demo-vendor-2",
+    slug: "mamas-home-kitchen",
+    name: "Mama's Home Kitchen",
+    description: "Comforting pap, stew and seasonal home-style plates.",
+    category: "Home-cooked",
+    neighbourhood: "Diepkloof",
+    rating: 4.7,
+    reviewCount: 0,
+    deliveryFee: 18,
+    eta: [30, 45],
+    isOpen: true,
+    accent: "gold",
+  },
+  {
+    id: "demo-vendor-3",
+    slug: "vilakazi-shisanyama",
+    name: "Vilakazi Shisanyama",
+    description: "Flame-grilled favourites, sides and sharing plates.",
+    category: "Shisanyama",
+    neighbourhood: "Orlando East",
+    rating: 4.9,
+    reviewCount: 0,
+    deliveryFee: 22,
+    eta: [35, 50],
+    isOpen: false,
+    accent: "charcoal",
+  },
+];
+
+export const demoMeals: Meal[] = [
+  {
+    id: "demo-meal-1",
+    vendorSlug: "soweto-kota-corner",
+    name: "Classic Kota",
+    description: "Fresh bread, chips, atchar, polony and egg.",
+    category: "Kota",
+    price: 48,
+    accent: "coral",
+    symbol: "K",
+  },
+  {
+    id: "demo-meal-2",
+    vendorSlug: "mamas-home-kitchen",
+    name: "Pap & Beef Stew",
+    description: "Slow-cooked beef stew with pap and two sides.",
+    category: "Home-cooked",
+    price: 89,
+    accent: "gold",
+    symbol: "P",
+  },
+  {
+    id: "demo-meal-3",
+    vendorSlug: "vilakazi-shisanyama",
+    name: "Grill Plate",
+    description: "Flame-grilled chicken, wors, pap and chakalaka.",
+    category: "Shisanyama",
+    price: 119,
+    accent: "charcoal",
+    symbol: "S",
+  },
+  {
+    id: "demo-meal-4",
+    vendorSlug: "mamas-home-kitchen",
+    name: "Amagwinya & Mince",
+    description: "Two warm amagwinya with savoury mince.",
+    category: "Breakfast",
+    price: 42,
+    accent: "leaf",
+    symbol: "A",
+  },
+];
+
+export const categories = [
+  { label: "Kota", symbol: "K", tone: "coral" },
+  { label: "Home-cooked", symbol: "H", tone: "gold" },
+  { label: "Shisanyama", symbol: "S", tone: "charcoal" },
+  { label: "Amagwinya", symbol: "A", tone: "leaf" },
+  { label: "Chicken", symbol: "C", tone: "sky" },
+  { label: "Bunny chow", symbol: "B", tone: "plum" },
+];

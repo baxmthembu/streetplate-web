@@ -17,6 +17,15 @@ export const metadata: Metadata = {
   },
   description:
     "Discover home kitchens, township vendors, spaza shops and local food businesses near you.",
+  icons: {
+    apple: [
+      {
+        url: "/brand/streetplate-logo-compact.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  },
   openGraph: {
     type: "website",
     locale: "en_ZA",

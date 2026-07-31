@@ -1,13 +1,22 @@
+import Image from "next/image";
 import Link from "next/link";
-
-import { Brand } from "./brand";
 
 export function SiteFooter() {
   return (
     <footer className="site-footer" id="footer-navigation">
       <div className="shell footer-grid">
         <div>
-          <Brand />
+          <Link href="/" aria-label="StreetPlate home">
+            <Image
+              className="footer-brand-logo"
+              src="/brand/streetplate-logo-compact.png"
+              alt="StreetPlate"
+              width={164}
+              height={164}
+              sizes="164px"
+              unoptimized
+            />
+          </Link>
           <p className="footer-copy">
             Local food, delivered from your community.
           </p>

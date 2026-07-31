@@ -120,17 +120,25 @@ summary {
   letter-spacing: -0.03em;
 }
 
-.brand-mark {
-  align-items: center;
-  background: var(--orange);
-  border-radius: 12px 12px 12px 3px;
-  color: white;
-  display: inline-flex;
-  font-size: 0.7rem;
-  height: 34px;
-  justify-content: center;
-  letter-spacing: -0.02em;
-  width: 34px;
+.brand-logo-crop {
+  background: #fdf8f2;
+  border: 1px solid #f0dfcf;
+  border-radius: 11px;
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 38px;
+  overflow: hidden;
+  position: relative;
+  width: 52px;
+}
+
+.brand-logo-image {
+  height: 74px;
+  left: -5px;
+  max-width: none;
+  position: absolute;
+  top: -13px;
+  width: 74px;
 }
 
 .desktop-nav {
@@ -317,81 +325,27 @@ summary {
 }
 
 .hero-art {
+  align-items: center;
+  display: flex;
   height: 475px;
+  justify-content: center;
   position: relative;
 }
 
-.art-card {
-  align-items: center;
-  background: white;
-  border: 1px solid #eee2d4;
+.hero-logo-card {
+  background: #fdf8f2;
+  border: 1px solid #ead8c7;
+  border-radius: 42px;
   box-shadow: var(--shadow);
-  display: flex;
-  position: absolute;
+  overflow: hidden;
+  transform: rotate(2deg);
+  width: min(92%, 455px);
 }
 
-.art-card-main {
-  border-radius: 38px;
-  flex-direction: column;
-  height: 355px;
-  justify-content: center;
-  left: 12%;
-  top: 55px;
-  transform: rotate(-3deg);
-  width: 67%;
-}
-
-.art-card-main strong {
-  font-size: 1.4rem;
-  margin-top: 1rem;
-}
-
-.art-card-main small {
-  color: var(--muted);
-  margin-top: 0.3rem;
-}
-
-.art-card-top,
-.art-card-bottom {
-  border-radius: 22px;
-  flex-direction: column;
-  gap: 0.65rem;
-  height: 165px;
-  justify-content: center;
-  width: 155px;
-}
-
-.art-card-top {
-  right: 0;
-  top: 0;
-  transform: rotate(6deg);
-}
-
-.art-card-bottom {
-  bottom: 0;
-  left: 0;
-  transform: rotate(-8deg);
-}
-
-.plate {
-  align-items: center;
-  background: var(--cream);
-  border: 10px solid #f8e8d8;
-  border-radius: 50%;
-  color: var(--orange-dark);
-  display: flex;
-  font-size: 2.6rem;
-  font-weight: 950;
-  height: 88px;
-  justify-content: center;
-  width: 88px;
-}
-
-.plate-large {
-  border-width: 18px;
-  font-size: 3rem;
-  height: 155px;
-  width: 155px;
+.hero-logo-image {
+  display: block;
+  height: auto;
+  width: 100%;
 }
 
 .art-stamp {
@@ -901,6 +855,15 @@ summary {
 .footer-grid a:not(.brand) {
   color: #cdd4d0;
   font-size: 0.86rem;
+}
+
+.footer-brand-logo {
+  background: #fdf8f2;
+  border: 1px solid #34413a;
+  border-radius: 24px;
+  display: block;
+  height: auto;
+  width: 164px;
 }
 
 .footer-copy {
@@ -1806,16 +1769,9 @@ summary {
     height: 395px;
   }
 
-  .art-card-main {
-    height: 300px;
-    left: 8%;
-    width: 70%;
-  }
-
-  .art-card-top,
-  .art-card-bottom {
-    height: 135px;
-    width: 125px;
+  .hero-logo-card {
+    border-radius: 30px;
+    width: min(92%, 395px);
   }
 
   .section-heading {

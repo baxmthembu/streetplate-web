@@ -10,6 +10,7 @@ import {
   Store,
   UtensilsCrossed,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { DemoNotice } from "@/components/demo-notice";
@@ -78,19 +79,18 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <div className="hero-art" aria-label="A StreetPlate meal collection">
-            <div className="art-card art-card-main">
-              <span className="plate plate-large">SP</span>
-              <strong>Made nearby</strong>
-              <small>Delivered with care</small>
-            </div>
-            <div className="art-card art-card-top">
-              <span className="plate">K</span>
-              <strong>Kota</strong>
-            </div>
-            <div className="art-card art-card-bottom">
-              <span className="plate">P</span>
-              <strong>Pap & stew</strong>
+          <div className="hero-art">
+            <div className="hero-logo-card">
+              <Image
+                className="hero-logo-image"
+                src="/brand/streetplate-logo-master.png"
+                alt="StreetPlate delivery rider logo"
+                width={2000}
+                height={2000}
+                sizes="(max-width: 680px) 88vw, (max-width: 980px) 520px, 42vw"
+                priority
+                unoptimized
+              />
             </div>
             <div className="art-stamp">
               <ShieldCheck size={22} aria-hidden="true" />

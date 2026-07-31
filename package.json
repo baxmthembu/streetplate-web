@@ -10,9 +10,13 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:live": "playwright test e2e/live-account.spec.ts",
+    "validate:production-env": "node scripts/check-production-env.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "check:all": "npm run check && npm run build && npm run test:e2e"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -26,6 +30,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",

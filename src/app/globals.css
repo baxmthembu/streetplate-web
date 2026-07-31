@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --orange: #f97316;
-  --orange-dark: #d8570b;
+  --orange: #c2410c;
+  --orange-dark: #7c2d12;
   --yellow: #facc15;
   --charcoal: #1f2937;
   --ink: #152019;
@@ -213,6 +213,10 @@ summary {
   letter-spacing: 0.12em;
   margin: 0 0 0.55rem;
   text-transform: uppercase;
+}
+
+.how-panel .eyebrow {
+  color: #fdba74;
 }
 
 .hero-eyebrow {
@@ -2132,11 +2136,21 @@ summary {
 }
 .cookie-consent a {
   color: #ffd2a8;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 .cookie-consent > div:last-child {
   display: flex;
   gap: 0.5rem;
   flex-shrink: 0;
+}
+
+.error-state {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 55vh;
 }
 
 @media (max-width: 760px) {

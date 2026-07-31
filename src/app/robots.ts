@@ -14,7 +14,16 @@ export default function robots(): MetadataRoute.Robots {
         "/become-a-vendor",
         "/become-a-driver",
       ],
-      disallow: ["/account", "/checkout"],
+      disallow: [
+        "/account",
+        "/api/",
+        "/auth/",
+        "/checkout",
+        "/forgot-password",
+        "/orders/",
+        "/reset-password",
+        "/sign-in",
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

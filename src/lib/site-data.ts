@@ -51,6 +51,7 @@ export const demoVendors: Vendor[] = [
     isOpen: true,
     accent: "coral",
     promoted: true,
+    coverImage: "/food/kota.png",
   },
   {
     id: "demo-vendor-2",
@@ -65,6 +66,7 @@ export const demoVendors: Vendor[] = [
     eta: [30, 45],
     isOpen: true,
     accent: "gold",
+    coverImage: "/food/pap-beef-stew.png",
   },
   {
     id: "demo-vendor-3",
@@ -79,6 +81,7 @@ export const demoVendors: Vendor[] = [
     eta: [35, 50],
     isOpen: false,
     accent: "charcoal",
+    coverImage: "/food/shisanyama.png",
   },
 ];
 
@@ -94,6 +97,7 @@ export const demoMeals: Meal[] = [
     price: 48,
     accent: "coral",
     symbol: "K",
+    imageUrl: "/food/kota.png",
   },
   {
     id: "demo-meal-2",
@@ -106,6 +110,7 @@ export const demoMeals: Meal[] = [
     price: 89,
     accent: "gold",
     symbol: "P",
+    imageUrl: "/food/pap-beef-stew.png",
   },
   {
     id: "demo-meal-3",
@@ -118,6 +123,7 @@ export const demoMeals: Meal[] = [
     price: 119,
     accent: "charcoal",
     symbol: "S",
+    imageUrl: "/food/shisanyama.png",
   },
   {
     id: "demo-meal-4",
@@ -130,14 +136,69 @@ export const demoMeals: Meal[] = [
     price: 42,
     accent: "leaf",
     symbol: "A",
+    imageUrl: "/food/amagwinya-mince.png",
   },
 ];
 
 export const categories = [
-  { label: "Kota", symbol: "K", tone: "coral" },
-  { label: "Home-cooked", symbol: "H", tone: "gold" },
-  { label: "Shisanyama", symbol: "S", tone: "charcoal" },
-  { label: "Amagwinya", symbol: "A", tone: "leaf" },
-  { label: "Chicken", symbol: "C", tone: "sky" },
-  { label: "Bunny chow", symbol: "B", tone: "plum" },
+  { label: "Kota", image: "/food/kota.png", tone: "coral" },
+  {
+    label: "Home-cooked",
+    image: "/food/pap-beef-stew.png",
+    tone: "gold",
+  },
+  { label: "Shisanyama", image: "/food/shisanyama.png", tone: "charcoal" },
+  {
+    label: "Amagwinya",
+    image: "/food/amagwinya-mince.png",
+    tone: "leaf",
+  },
+  { label: "Chicken", image: "/food/grilled-chicken.png", tone: "sky" },
+  { label: "Bunny chow", image: "/food/bunny-chow.png", tone: "plum" },
 ];
+
+const foodImageRules = [
+  { terms: ["bunny"], image: "/food/bunny-chow.png" },
+  {
+    terms: ["amagwinya", "vetkoek", "fat cake"],
+    image: "/food/amagwinya-mince.png",
+  },
+  { terms: ["chicken"], image: "/food/grilled-chicken.png" },
+  {
+    terms: ["shisanyama", "grill", "braai", "wors"],
+    image: "/food/shisanyama.png",
+  },
+  { terms: ["kota"], image: "/food/kota.png" },
+] as const;
+
+function isSupportedRemoteImage(candidate: string) {
+  try {
+    const { hostname, protocol } = new URL(candidate);
+    return (
+      protocol === "https:" &&
+      (hostname === "res.cloudinary.com" || hostname.endsWith(".supabase.co"))
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function foodImageFor(
+  category: string,
+  name = "",
+  candidate?: string | null,
+) {
+  if (
+    candidate?.startsWith("/") ||
+    (candidate && isSupportedRemoteImage(candidate))
+  ) {
+    return candidate;
+  }
+
+  const description = `${category} ${name}`.toLowerCase();
+  return (
+    foodImageRules.find(({ terms }) =>
+      terms.some((term) => description.includes(term)),
+    )?.image ?? "/food/pap-beef-stew.png"
+  );
+}

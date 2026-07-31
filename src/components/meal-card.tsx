@@ -1,12 +1,20 @@
+import Image from "next/image";
+
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { formatRand } from "@/lib/format";
-import type { Meal } from "@/lib/site-data";
+import { foodImageFor, type Meal } from "@/lib/site-data";
 
 export function MealCard({ meal }: { meal: Meal }) {
   return (
     <article className="meal-card">
-      <div className={`meal-visual tone-${meal.accent}`} aria-hidden="true">
-        {meal.symbol}
+      <div className={`meal-visual tone-${meal.accent}`}>
+        <Image
+          className="food-card-image"
+          src={foodImageFor(meal.category, meal.name, meal.imageUrl)}
+          alt={`${meal.name} from ${meal.vendorName}`}
+          fill
+          sizes="(max-width: 680px) 100vw, (max-width: 980px) 50vw, 25vw"
+        />
       </div>
       <div className="meal-card-body">
         <p className="eyebrow">{meal.category}</p>

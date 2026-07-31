@@ -118,7 +118,13 @@ export default async function Home() {
               className="category-card"
             >
               <span className={`category-symbol tone-${category.tone}`}>
-                {category.symbol}
+                <Image
+                  className="category-image"
+                  src={category.image}
+                  alt=""
+                  fill
+                  sizes="74px"
+                />
               </span>
               <strong>{category.label}</strong>
             </Link>

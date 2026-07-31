@@ -1,15 +1,22 @@
 import { Clock3, MapPin, Star } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { formatMinutes, formatRand } from "@/lib/format";
-import type { Vendor } from "@/lib/site-data";
+import { foodImageFor, type Vendor } from "@/lib/site-data";
 
 export function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
     <article className="vendor-card">
       <Link href={`/vendors/${vendor.slug}`} className="card-stretch">
         <div className={`food-visual tone-${vendor.accent}`}>
-          <span>{vendor.category.slice(0, 1)}</span>
+          <Image
+            className="food-card-image"
+            src={foodImageFor(vendor.category, vendor.name, vendor.coverImage)}
+            alt={`${vendor.category} from ${vendor.name}`}
+            fill
+            sizes="(max-width: 680px) 100vw, (max-width: 980px) 50vw, 33vw"
+          />
           {vendor.promoted && <strong>Featured</strong>}
           <span className={`status ${vendor.isOpen ? "open" : "closed"}`}>
             {vendor.isOpen ? "Open" : "Closed"}

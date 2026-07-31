@@ -436,14 +436,24 @@ summary {
 }
 
 .category-symbol {
-  align-items: center;
+  border: 3px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  display: flex;
-  font-size: 1.5rem;
-  font-weight: 950;
   height: 74px;
-  justify-content: center;
+  overflow: hidden;
+  position: relative;
   width: 74px;
+}
+
+.category-image,
+.food-card-image {
+  object-fit: cover;
+  transition: transform 240ms ease;
+}
+
+.category-card:hover .category-image,
+.vendor-card:hover .food-card-image,
+.meal-card:hover .food-card-image {
+  transform: scale(1.04);
 }
 
 .vendor-grid,
@@ -490,18 +500,9 @@ summary {
   position: relative;
 }
 
-.food-visual > span:first-child,
 .meal-visual {
-  align-items: center;
-  background: rgba(255, 255, 255, 0.88);
-  border: 10px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
-  display: flex;
-  font-size: 2.4rem;
-  font-weight: 950;
-  height: 94px;
-  justify-content: center;
-  width: 94px;
+  overflow: hidden;
+  position: relative;
 }
 
 .food-visual strong,
@@ -512,6 +513,7 @@ summary {
   padding: 0.4rem 0.65rem;
   position: absolute;
   top: 0.85rem;
+  z-index: 1;
 }
 
 .food-visual strong {
@@ -599,6 +601,7 @@ summary {
 .meal-visual {
   border-radius: 0;
   height: 100%;
+  position: relative;
   width: 100%;
 }
 

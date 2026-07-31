@@ -6,6 +6,29 @@ async function chooseEssentialCookies(page: Page) {
   if (await button.isVisible()) await button.click();
 }
 
+async function expectFoodImagesLoaded(page: Page) {
+  const images = page.locator(".category-image, .food-card-image");
+  await expect(images).toHaveCount(13);
+
+  for (const selector of [
+    ".category-grid img",
+    ".vendor-grid img",
+    ".meal-grid img",
+  ]) {
+    const image = page.locator(selector).first();
+    await image.scrollIntoViewIfNeeded();
+    await expect
+      .poll(
+        () =>
+          image.evaluate(
+            (element) => (element as HTMLImageElement).naturalWidth,
+          ),
+        { timeout: 15_000 },
+      )
+      .toBeGreaterThan(0);
+  }
+}
+
 test("home and discovery remain usable across supported viewports", async ({
   page,
 }) => {
@@ -18,6 +41,7 @@ test("home and discovery remain usable across supported viewports", async ({
     "scrollWidth",
     await page.locator("html").evaluate((element) => element.clientWidth),
   );
+  await expectFoodImagesLoaded(page);
 
   await page.goto("/discover");
   const marketplaceSearch = page.getByRole("textbox", {

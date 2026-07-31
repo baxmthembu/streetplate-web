@@ -1,7 +1,8 @@
-import { MapPin, Menu, Search, ShoppingBag, UserRound } from "lucide-react";
+import { MapPin, Menu, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { Brand } from "./brand";
+import { CartLink } from "./cart-link";
 
 export function SiteHeader() {
   return (
@@ -30,17 +31,11 @@ export function SiteHeader() {
             >
               <Search size={20} aria-hidden="true" />
             </Link>
-            <Link
-              className="icon-link"
-              href="/cart"
-              aria-label="Open your cart"
-            >
-              <ShoppingBag size={20} aria-hidden="true" />
-            </Link>
+            <CartLink />
             <Link
               className="icon-link desktop-account"
-              href="/sign-in"
-              aria-label="Sign in"
+              href="/account"
+              aria-label="Open your account"
             >
               <UserRound size={20} aria-hidden="true" />
             </Link>

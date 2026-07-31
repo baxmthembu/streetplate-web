@@ -17,7 +17,7 @@ export default function SignInPage() {
         <SignInForm />
         <div className="auth-links">
           <Link href="/join">Need an account?</Link>
-          <Link href="/join#password-help">Forgot your password?</Link>
+          <Link href="/forgot-password">Forgot your password?</Link>
         </div>
       </div>
       <aside className="auth-note">

@@ -1,5 +1,6 @@
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { RegisterForm } from "@/components/register-form";
 
 type RecruitmentPageProps = {
   audience: "vendor" | "driver";
@@ -86,6 +87,14 @@ export function RecruitmentPage({
               explicit approval.
             </p>
             <Link href="/legal/privacy">Read the privacy approach</Link>
+            <hr />
+            <h3>Create your shared StreetPlate account</h3>
+            <p>
+              This uses the existing mobile/backend registration contract.
+              Document verification remains gated until private storage is
+              approved.
+            </p>
+            <RegisterForm role={audience} />
           </aside>
         </div>
       </section>

@@ -31,6 +31,8 @@ export function SiteFooter() {
           <Link href="/legal/terms">Terms & conditions</Link>
           <Link href="/legal/cookies">Cookie policy</Link>
           <Link href="/legal/refunds">Refunds & cancellations</Link>
+          <Link href="/legal/vendor-terms">Vendor terms</Link>
+          <Link href="/legal/driver-terms">Driver terms</Link>
         </div>
       </div>
       <div className="shell footer-bottom">

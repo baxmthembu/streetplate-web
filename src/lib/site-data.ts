@@ -12,17 +12,26 @@ export type Vendor = {
   isOpen: boolean;
   accent: string;
   promoted?: boolean;
+  coverImage?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  deliveryRadius?: number | null;
 };
 
 export type Meal = {
   id: string;
+  vendorId: string;
   vendorSlug: string;
+  vendorName: string;
   name: string;
   description: string;
   category: string;
   price: number;
   accent: string;
   symbol: string;
+  imageUrl?: string | null;
+  preparationTime?: number;
+  isAvailable?: boolean;
 };
 
 // Clearly labelled design fixtures. Production screens replace these through
@@ -76,7 +85,9 @@ export const demoVendors: Vendor[] = [
 export const demoMeals: Meal[] = [
   {
     id: "demo-meal-1",
+    vendorId: "demo-vendor-1",
     vendorSlug: "soweto-kota-corner",
+    vendorName: "Soweto Kota Corner",
     name: "Classic Kota",
     description: "Fresh bread, chips, atchar, polony and egg.",
     category: "Kota",
@@ -86,7 +97,9 @@ export const demoMeals: Meal[] = [
   },
   {
     id: "demo-meal-2",
+    vendorId: "demo-vendor-2",
     vendorSlug: "mamas-home-kitchen",
+    vendorName: "Mama's Home Kitchen",
     name: "Pap & Beef Stew",
     description: "Slow-cooked beef stew with pap and two sides.",
     category: "Home-cooked",
@@ -96,7 +109,9 @@ export const demoMeals: Meal[] = [
   },
   {
     id: "demo-meal-3",
+    vendorId: "demo-vendor-3",
     vendorSlug: "vilakazi-shisanyama",
+    vendorName: "Vilakazi Shisanyama",
     name: "Grill Plate",
     description: "Flame-grilled chicken, wors, pap and chakalaka.",
     category: "Shisanyama",
@@ -106,7 +121,9 @@ export const demoMeals: Meal[] = [
   },
   {
     id: "demo-meal-4",
+    vendorId: "demo-vendor-2",
     vendorSlug: "mamas-home-kitchen",
+    vendorName: "Mama's Home Kitchen",
     name: "Amagwinya & Mince",
     description: "Two warm amagwinya with savoury mince.",
     category: "Breakfast",

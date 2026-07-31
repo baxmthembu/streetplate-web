@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/legal/terms",
     "/legal/cookies",
     "/legal/refunds",
+    "/legal/vendor-terms",
+    "/legal/driver-terms",
   ];
 
   return routes.map((route) => ({

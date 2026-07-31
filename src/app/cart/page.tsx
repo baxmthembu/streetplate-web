@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CartPreview } from "@/components/cart-preview";
+import { Cart } from "@/components/cart";
 import { DemoNotice } from "@/components/demo-notice";
 
 export const metadata: Metadata = { title: "Your cart" };
@@ -16,7 +16,7 @@ export default function CartPage() {
       </section>
       <section className="shell content-page">
         <DemoNotice />
-        <CartPreview />
+        <Cart />
       </section>
     </>
   );

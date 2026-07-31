@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { DemoNotice } from "@/components/demo-notice";
 import { MealCard } from "@/components/meal-card";
+import { saveVendor } from "@/app/account/actions";
 import { formatMinutes, formatRand } from "@/lib/format";
 import { getVendorBySlug } from "@/lib/streetplate-api";
 
@@ -59,9 +60,17 @@ export default async function VendorPage({ params }: Props) {
               <span>{formatRand(vendor.deliveryFee)} delivery</span>
             </div>
           </div>
-          <button className="favorite-button" type="button">
-            <Heart size={19} aria-hidden="true" /> Save vendor
-          </button>
+          <form action={saveVendor}>
+            <input type="hidden" name="vendorId" value={vendor.id} />
+            <input
+              type="hidden"
+              name="path"
+              value={`/vendors/${vendor.slug}`}
+            />
+            <button className="favorite-button" type="submit">
+              <Heart size={19} aria-hidden="true" /> Save vendor
+            </button>
+          </form>
         </div>
       </section>
 
@@ -87,12 +96,8 @@ export default async function VendorPage({ params }: Props) {
             </div>
           ) : (
             <div className="empty-state">
-              <h3>Menu integration is being connected safely.</h3>
-              <p>
-                The current backend vendor-detail endpoint exposes private
-                vendor columns. StreetPlate web will not call it until a
-                backwards-compatible safe public contract is approved.
-              </p>
+              <h3>No menu items are available right now.</h3>
+              <p>Check back when the vendor has published available items.</p>
             </div>
           )}
         </div>

@@ -78,6 +78,44 @@ const documents = {
       ],
     ],
   },
+  "vendor-terms": {
+    title: "Vendor Terms",
+    intro:
+      "These draft terms describe the intended responsibilities of independent food businesses using StreetPlate.",
+    sections: [
+      [
+        "Food and business compliance",
+        "Vendors remain responsible for lawful operation, food safety, accurate menus and required registrations.",
+      ],
+      [
+        "Orders and availability",
+        "Vendors must keep availability current and respond to paid orders through the approved operational application.",
+      ],
+      [
+        "Payments and fees",
+        "Final commercial terms must define commissions, settlement timing, deductions and disputes before activation.",
+      ],
+    ],
+  },
+  "driver-terms": {
+    title: "Delivery Partner Terms",
+    intro:
+      "These draft terms outline the intended independent delivery-partner relationship.",
+    sections: [
+      [
+        "Eligibility",
+        "Drivers must provide accurate identity, licence and vehicle information where required.",
+      ],
+      [
+        "Safety and conduct",
+        "Delivery partners must follow road laws, food-handling requirements and customer-safety standards.",
+      ],
+      [
+        "Earnings",
+        "Earnings vary by accepted and completed deliveries; no minimum earnings are promised by this draft.",
+      ],
+    ],
+  },
 } as const;
 
 type Props = PageProps<"/legal/[document]">;

@@ -1,60 +1,33 @@
 import type { Metadata } from "next";
-import { AlertTriangle, Smartphone } from "lucide-react";
 import Link from "next/link";
+
+import { RegisterForm } from "@/components/register-form";
 
 export const metadata: Metadata = { title: "Join StreetPlate" };
 
 export default function JoinPage() {
   return (
-    <>
-      <section className="page-hero">
-        <div className="shell">
-          <p className="eyebrow">One account, mobile and web</p>
-          <h1>Join StreetPlate</h1>
-          <p>
-            Customer registration and password recovery need to preserve the
-            existing mobile app&apos;s dual-authentication flow. We will not
-            create incomplete or duplicate profiles.
-          </p>
+    <section className="auth-page">
+      <div className="auth-card">
+        <p className="eyebrow">One account, mobile and web</p>
+        <h1>Join StreetPlate</h1>
+        <p>
+          Create a customer account through the existing shared backend so your
+          Auth identity and StreetPlate profile are created together.
+        </p>
+        <RegisterForm />
+        <div className="auth-links">
+          <Link href="/sign-in">Already have an account?</Link>
+          <Link href="/legal/terms">Terms</Link>
         </div>
-      </section>
-      <section className="shell content-page">
-        <div className="compatibility-card">
-          <AlertTriangle size={28} aria-hidden="true" />
-          <div>
-            <h2>Registration is held behind a compatibility gate</h2>
-            <p>
-              The existing backend creates both the Supabase Auth user and the
-              shared public profile. A direct web sign-up could leave an orphan
-              account; a direct password reset could also desynchronise mobile
-              login. This phase therefore enables compatible sign-in only.
-            </p>
-            <p>
-              The next safe step is a backwards-compatible backend auth contract
-              reviewed against customer, vendor, driver and admin workflows.
-            </p>
-          </div>
-        </div>
-        <div className="join-choice-grid">
-          <article>
-            <Smartphone aria-hidden="true" />
-            <h2>Already have an account?</h2>
-            <p>
-              Use your current StreetPlate details on the secure sign-in page.
-            </p>
-            <Link href="/sign-in" className="button button-orange">
-              Sign in
-            </Link>
-          </article>
-          <article id="password-help">
-            <h2>Need account help?</h2>
-            <p>
-              Password recovery will be enabled once the shared auth flow can
-              update both mobile and Supabase credentials safely.
-            </p>
-          </article>
-        </div>
-      </section>
-    </>
+      </div>
+      <aside className="auth-note">
+        <strong>Verify before ordering</strong>
+        <p>
+          After registering, use the email verification link before signing in.
+          Your profile, favourites and orders stay shared with mobile.
+        </p>
+      </aside>
+    </section>
   );
 }

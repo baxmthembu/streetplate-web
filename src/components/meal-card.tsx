@@ -1,5 +1,4 @@
-import { Plus } from "lucide-react";
-
+import { AddToCartButton } from "@/components/add-to-cart-button";
 import { formatRand } from "@/lib/format";
 import type { Meal } from "@/lib/site-data";
 
@@ -15,13 +14,7 @@ export function MealCard({ meal }: { meal: Meal }) {
         <p>{meal.description}</p>
         <div className="meal-bottom">
           <strong>{formatRand(meal.price)}</strong>
-          <button
-            type="button"
-            className="add-button"
-            aria-label={`Add ${meal.name} to cart`}
-          >
-            <Plus size={18} aria-hidden="true" />
-          </button>
+          <AddToCartButton meal={meal} />
         </div>
       </div>
     </article>

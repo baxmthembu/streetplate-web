@@ -15,8 +15,8 @@ import Link from "next/link";
 import { DemoNotice } from "@/components/demo-notice";
 import { MealCard } from "@/components/meal-card";
 import { VendorCard } from "@/components/vendor-card";
-import { categories, demoMeals } from "@/lib/site-data";
-import { getVendors } from "@/lib/streetplate-api";
+import { categories } from "@/lib/site-data";
+import { getMarketplace } from "@/lib/streetplate-api";
 
 const faqs = [
   {
@@ -37,7 +37,7 @@ const faqs = [
 ];
 
 export default async function Home() {
-  const { vendors, isDemo } = await getVendors();
+  const { vendors, meals, isDemo } = await getMarketplace();
 
   return (
     <>
@@ -157,7 +157,7 @@ export default async function Home() {
           </Link>
         </div>
         <div className="meal-grid">
-          {demoMeals.map((meal) => (
+          {meals.slice(0, 6).map((meal) => (
             <MealCard key={meal.id} meal={meal} />
           ))}
         </div>

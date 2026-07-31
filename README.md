@@ -57,9 +57,11 @@ npm run dev
 npm run check
 npm run build
 npm run format:check
+npm run test:e2e
+npm run validate:production-env
 ```
 
-`npm run check` runs linting, TypeScript validation and unit/component tests.
+`npm run check` runs linting, TypeScript validation and unit/component tests. `npm run check:all` adds a production build and desktop/mobile browser journeys.
 
 ## Branch strategy
 
@@ -78,4 +80,4 @@ The initial implementation branch is `feature/initial-streetplate-web`. Changes 
 - The existing Express backend remains the canonical order, price, PayFast and dispatch boundary.
 - The existing Socket.IO service remains the realtime system; the website will not add a second one.
 
-See [Architecture](./docs/architecture.md), [Live services](./docs/live-services.md), [Database change process](./docs/database-change-process.md), [Deployment](./docs/deployment.md) and [Mobile impact](./docs/mobile-impact.md).
+See [Architecture](./docs/architecture.md), [Live services](./docs/live-services.md), [Production readiness](./docs/production-readiness.md), [Security review](./docs/security-review-20260731.md), [Operations](./docs/operations-runbook.md), [Database change process](./docs/database-change-process.md), [Deployment](./docs/deployment.md) and [Mobile impact](./docs/mobile-impact.md).

@@ -19,6 +19,8 @@ The existing Railway-hosted Express API and shared Supabase project remain separ
 7. Confirm backend CORS permits only approved website origins.
 8. Do not add `SUPABASE_SERVICE_ROLE_KEY`, PayFast credentials, Cloudinary credentials or the backend Maps key to this website.
 9. Configure `STREETPLATE_API_URL` and `NEXT_PUBLIC_SOCKET_URL` to the approved existing backend origin.
+10. Run `npm run validate:production-env` in each configured deployment environment.
+11. Configure the hosting health check to `/api/health` and gate traffic on `/api/readiness` returning HTTP 200.
 
 ## Release checklist
 
@@ -30,5 +32,6 @@ The existing Railway-hosted Express API and shared Supabase project remain separ
 - PayFast remains sandbox until separately approved
 - No unapproved migrations pending or applied
 - Rollback is the previous Vercel deployment and, when applicable, a reviewed SQL rollback
+- Desktop/mobile Playwright tests and the opt-in staging account journey are green
 
 No production deployment is performed by the initial implementation.

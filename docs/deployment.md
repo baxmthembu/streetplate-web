@@ -17,7 +17,8 @@ The existing Railway-hosted Express API and shared Supabase project remain separ
 5. Run `npm run check` and `npm run build` before promotion.
 6. Verify auth callback/site URLs in Supabase before enabling login on a new domain.
 7. Confirm backend CORS permits only approved website origins.
-8. Do not add `SUPABASE_SERVICE_ROLE_KEY` unless an approved server-only feature needs it.
+8. Do not add `SUPABASE_SERVICE_ROLE_KEY`, PayFast credentials, Cloudinary credentials or the backend Maps key to this website.
+9. Configure `STREETPLATE_API_URL` and `NEXT_PUBLIC_SOCKET_URL` to the approved existing backend origin.
 
 ## Release checklist
 

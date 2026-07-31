@@ -4,7 +4,7 @@ The separate customer-facing web platform for StreetPlate, a South African local
 
 This repository is intentionally independent from [`baxmthembu/kasi-eats`](https://github.com/baxmthembu/kasi-eats). The mobile and backend repository is read-only reference material for this project.
 
-## Phase-one scope
+## Live web scope
 
 - Next.js 16 App Router, React 19 and TypeScript
 - Tailwind CSS 4 with a custom StreetPlate design system
@@ -12,12 +12,15 @@ This repository is intentionally independent from [`baxmthembu/kasi-eats`](https
 - Supabase SSR browser/server clients and request proxy
 - Compatible email/password sign-in for existing accounts
 - Server-side public vendor discovery through the existing Express API
-- Explicit demo fallbacks when no backend URL is configured
+- Live registration, password recovery, customer profile, addresses and favourites
+- Live menus, one-vendor cart, server-validated checkout and PayFast handoff
+- Customer-owned order history, status updates, cancellation and reviews
+- Explicit demo fallbacks only when no backend URL is configured
 - SEO metadata, sitemap, robots and generated Open Graph artwork
 - Vitest and Testing Library setup
 - ESLint, Prettier, CI and deployment documentation
 
-Registration, password reset, checkout, payments, application uploads and live tracking are intentionally gated. The existing shared backend and database have compatibility/security issues that require a separately approved backend or database change. The website does not work around those controls in browser code.
+Private onboarding documents, account deletion, direct driver-location sockets and a new admin portal remain approval-gated. See [Live services](./docs/live-services.md) for the exact compatibility boundary.
 
 ## Local development
 
@@ -45,7 +48,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-Set `STREETPLATE_API_URL` to the existing backend origin without a trailing `/api` segment. Without it, public pages show clearly marked design fixtures.
+Set `STREETPLATE_API_URL` to the existing backend origin with or without a trailing `/api` segment. Set `NEXT_PUBLIC_SOCKET_URL` to the existing Socket.IO origin. Without an API URL, public pages show clearly marked design fixtures and checkout is unavailable.
 
 ## Commands
 
@@ -75,4 +78,4 @@ The initial implementation branch is `feature/initial-streetplate-web`. Changes 
 - The existing Express backend remains the canonical order, price, PayFast and dispatch boundary.
 - The existing Socket.IO service remains the realtime system; the website will not add a second one.
 
-See [Architecture](./docs/architecture.md), [Database change process](./docs/database-change-process.md), [Deployment](./docs/deployment.md) and [Mobile impact](./docs/mobile-impact.md).
+See [Architecture](./docs/architecture.md), [Live services](./docs/live-services.md), [Database change process](./docs/database-change-process.md), [Deployment](./docs/deployment.md) and [Mobile impact](./docs/mobile-impact.md).

@@ -1,6 +1,6 @@
 # Mobile impact report
 
-Initial website phase:
+Live website implementation:
 
 | Measure                         | Result |
 | ------------------------------- | -----: |
@@ -13,8 +13,9 @@ Initial website phase:
 
 Compatibility validation:
 
-- Existing public vendor-list contract is consumed without modification.
-- Existing Supabase accounts are used for SSR sign-in.
-- Registration and password reset remain gated to avoid dual-auth divergence.
-- Order, PayFast, dispatch and Socket.IO contracts are not changed in this phase.
+- Existing vendor, auth, customer, order, review, PayFast and `/orders` Socket.IO contracts are consumed without modification.
+- Existing Supabase accounts and profiles are used for SSR sign-in and shared registration.
+- No shared database write, migration, RLS update or Realtime publication was performed.
+- Customer web contract paths were validated statically and through automated website tests; live money movement was not executed.
+- Vendor, driver and admin operational applications remain unchanged and canonical.
 - Full customer/vendor/driver/admin app regression testing is pending because the mobile app directories in `kasi-eats` are unresolved gitlinks in a fresh checkout.

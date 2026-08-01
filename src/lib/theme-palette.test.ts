@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const css = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
+const layout = readFileSync(join(process.cwd(), "src/app/layout.tsx"), "utf8");
 
 const sharedMobilePalette = {
   primary: "#f97316",
@@ -88,6 +89,17 @@ describe("shared StreetPlate theme", () => {
       expect(css).toContain(`--${token}: ${value};`);
     }
 
-    expect(css).toContain("font-family: var(--font-system);");
+    expect(css).toContain("font-family: var(--font-sans);");
+  });
+
+  it("uses the Noto superfamily with safe vertical text rhythm", () => {
+    expect(layout).toContain("Noto_Sans");
+    expect(layout).toContain("Noto_Serif");
+    expect(layout).toContain('variable: "--font-noto-sans"');
+    expect(layout).toContain('variable: "--font-noto-serif"');
+    expect(css).toContain("--font-sans: var(--font-noto-sans)");
+    expect(css).toContain("var(--font-noto-serif), Georgia");
+    expect(css).toContain("main :where(p + p");
+    expect(css).toContain("line-height: 1.08;");
   });
 });

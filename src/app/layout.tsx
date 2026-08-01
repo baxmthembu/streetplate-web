@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Noto_Sans, Noto_Serif } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -6,6 +7,18 @@ import { CartProvider } from "@/components/cart-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 
 import "./globals.css";
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-noto-sans",
+});
+
+const notoSerif = Noto_Serif({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-noto-serif",
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://streetplate.co.za";
 
@@ -43,7 +56,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-ZA">
+    <html lang="en-ZA" className={`${notoSans.variable} ${notoSerif.variable}`}>
       <body>
         <CartProvider>
           <a className="skip-link" href="#main-content">

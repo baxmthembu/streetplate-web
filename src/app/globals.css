@@ -866,6 +866,10 @@ summary {
   background: var(--yellow);
 }
 
+.driver-join .eyebrow {
+  color: var(--ink);
+}
+
 .join-card > svg {
   margin-bottom: 3rem;
 }
@@ -962,7 +966,7 @@ summary {
 }
 
 .newsletter .eyebrow {
-  color: var(--text-inverse);
+  color: var(--ink);
 }
 
 .newsletter-inner {

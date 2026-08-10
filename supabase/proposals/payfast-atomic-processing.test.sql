@@ -90,6 +90,30 @@ begin
     raise exception 'amount mismatch was not rejected';
   end if;
 
+  v_rejected := false;
+  begin
+    perform * from public.process_payfast_payment(
+      v_order, 100.00, 'PF-STAGING-SPLIT', now(), 10.00, 90.00
+    );
+  exception when sqlstate '22003' then
+    v_rejected := true;
+  end;
+  if not v_rejected then
+    raise exception 'incorrect 15/85 split was not rejected';
+  end if;
+
+  v_rejected := false;
+  begin
+    perform * from public.process_payfast_payment(
+      v_order, 100.00, '', now(), 15.00, 85.00
+    );
+  exception when sqlstate '23502' then
+    v_rejected := true;
+  end;
+  if not v_rejected then
+    raise exception 'missing PayFast payment ID was not rejected';
+  end if;
+
   insert into public.orders(
     id, customer_id, vendor_id, subtotal, delivery_fee, total, status,
     delivery_address

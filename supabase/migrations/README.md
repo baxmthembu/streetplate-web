@@ -1,5 +1,10 @@
 # Supabase migrations
 
-This directory is reserved for reviewed, reversible migration proposals.
+This directory contains CLI-generated, reviewed forward migrations.
 
-No migration has been added or applied for the initial website phase. A SQL file in this directory is not permission to apply it. Every shared database change must follow `docs/database-change-process.md` and wait for explicit approval after staging validation.
+The PayFast production-readiness migrations are additive: they do not rename or
+remove existing tables, columns, statuses, functions, triggers, buckets, roles,
+or API contracts. Matching operational rollback, verification and transactional
+staging-test SQL lives in `supabase/proposals/`.
+
+Every shared database change must still follow `docs/database-change-process.md`.

@@ -1,5 +1,6 @@
--- PROPOSAL ONLY - DO NOT APPLY WITHOUT STAGING VALIDATION AND EXPLICIT APPROVAL.
--- Makes PayFast completion, order confirmation and vendor credit one transaction.
+-- Atomically records a verified PayFast payment, confirms its order and
+-- credits the vendor exactly once. Existing database objects are not renamed
+-- or removed; the new financial tables remain service-role-only.
 
 begin;
 
@@ -31,8 +32,8 @@ create index if not exists idx_vendor_wallet_entries_vendor_created
 alter table public.vendor_wallets enable row level security;
 alter table public.vendor_wallet_entries enable row level security;
 
--- No anon/authenticated policies are created. These financial tables remain
--- service-role-only behind the existing backend API.
+-- No anon/authenticated policies are created. The service role reaches these
+-- objects only through the trusted backend and bypasses RLS by design.
 revoke all on table public.vendor_wallets from anon, authenticated;
 revoke all on table public.vendor_wallet_entries from anon, authenticated;
 grant all on table public.vendor_wallets to service_role;
@@ -115,8 +116,6 @@ begin
     p_vendor_payout,
     p_paid_at
   )
-  -- Named constraints avoid ambiguity with the RETURNS TABLE output columns,
-  -- which are also PL/pgSQL variables inside this function.
   on conflict on constraint payments_order_id_key do update set
     amount = excluded.amount,
     method = excluded.method,

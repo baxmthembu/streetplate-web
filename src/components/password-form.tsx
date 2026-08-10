@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import {
   requestPasswordReset,
   updatePassword,
   type AuthFormState,
 } from "@/app/auth/actions";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 
 const initialState: AuthFormState = { message: "" };
 
@@ -15,6 +16,8 @@ export function ForgotPasswordForm() {
     requestPasswordReset,
     initialState,
   );
+  const [verified, setVerified] = useState(false);
+  const [email, setEmail] = useState("");
   return (
     <form action={action} className="auth-form">
       <label htmlFor="reset-email">Email address</label>
@@ -24,6 +27,9 @@ export function ForgotPasswordForm() {
         type="email"
         required
         autoComplete="email"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        aria-invalid={state.field === "email"}
       />
       {state.message && (
         <p
@@ -33,7 +39,12 @@ export function ForgotPasswordForm() {
           {state.message}
         </p>
       )}
-      <button type="submit" disabled={pending}>
+      <TurnstileWidget
+        action="password_reset"
+        onVerifiedChange={setVerified}
+        resetSignal={state}
+      />
+      <button type="submit" disabled={pending || !verified}>
         {pending ? "Sending…" : "Send reset link"}
       </button>
     </form>
@@ -42,6 +53,9 @@ export function ForgotPasswordForm() {
 
 export function ResetPasswordForm() {
   const [state, action, pending] = useActionState(updatePassword, initialState);
+  const [verified, setVerified] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   return (
     <form action={action} className="auth-form">
       <label htmlFor="new-password">New password</label>
@@ -51,6 +65,10 @@ export function ResetPasswordForm() {
         type="password"
         autoComplete="new-password"
         minLength={8}
+        maxLength={128}
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        aria-invalid={state.field === "password"}
         required
       />
       <label htmlFor="confirm-password">Confirm password</label>
@@ -60,6 +78,10 @@ export function ResetPasswordForm() {
         type="password"
         autoComplete="new-password"
         minLength={8}
+        maxLength={128}
+        value={confirmPassword}
+        onChange={(event) => setConfirmPassword(event.target.value)}
+        aria-invalid={state.field === "confirmPassword"}
         required
       />
       {state.message && (
@@ -70,7 +92,12 @@ export function ResetPasswordForm() {
           {state.message}
         </p>
       )}
-      <button type="submit" disabled={pending || state.success}>
+      <TurnstileWidget
+        action="password_update"
+        onVerifiedChange={setVerified}
+        resetSignal={state}
+      />
+      <button type="submit" disabled={pending || state.success || !verified}>
         {pending
           ? "Updating…"
           : state.success

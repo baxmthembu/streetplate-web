@@ -9,20 +9,33 @@ function origin(value: string | undefined) {
   }
 }
 
+function websocketOrigin(value: string | undefined) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
 const connectSources = [
   "'self'",
   "https://*.supabase.co",
   "wss://*.supabase.co",
   origin(process.env.NEXT_PUBLIC_SOCKET_URL),
+  websocketOrigin(process.env.NEXT_PUBLIC_SOCKET_URL),
 ].filter(Boolean);
+const turnstileOrigin = "https://challenges.cloudflare.com";
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' ${turnstileOrigin}${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   `connect-src ${connectSources.join(" ")}`,
-  "frame-src 'none'",
+  `frame-src ${turnstileOrigin}`,
   "form-action 'self' https://*.payfast.co.za",
   "base-uri 'self'",
   "object-src 'none'",

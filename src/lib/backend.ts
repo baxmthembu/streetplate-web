@@ -6,6 +6,7 @@ export class StreetPlateApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly code?: string,
   ) {
     super(message);
   }
@@ -22,21 +23,26 @@ function apiBaseUrl(): string {
   return configured.endsWith("/api") ? configured : `${configured}/api`;
 }
 
-async function responseMessage(response: Response): Promise<string> {
+async function responseError(
+  response: Response,
+): Promise<{ message: string; code?: string }> {
   try {
     const payload = (await response.json()) as {
       error?: string;
       message?: string;
+      code?: string;
       errors?: Array<{ msg?: string }>;
     };
-    return (
-      payload.error ??
-      payload.message ??
-      payload.errors?.[0]?.msg ??
-      "StreetPlate could not complete that request."
-    );
+    return {
+      message:
+        payload.error ??
+        payload.message ??
+        payload.errors?.[0]?.msg ??
+        "StreetPlate could not complete that request.",
+      code: payload.code,
+    };
   } catch {
-    return "StreetPlate could not complete that request.";
+    return { message: "StreetPlate could not complete that request." };
   }
 }
 
@@ -77,10 +83,8 @@ export async function streetPlateApi<T>(
     },
   });
   if (!response.ok) {
-    throw new StreetPlateApiError(
-      await responseMessage(response),
-      response.status,
-    );
+    const error = await responseError(response);
+    throw new StreetPlateApiError(error.message, response.status, error.code);
   }
   return (await response.json()) as T;
 }
@@ -99,10 +103,8 @@ export async function streetPlatePublicApi<T>(
     },
   });
   if (!response.ok) {
-    throw new StreetPlateApiError(
-      await responseMessage(response),
-      response.status,
-    );
+    const error = await responseError(response);
+    throw new StreetPlateApiError(error.message, response.status, error.code);
   }
   return (await response.json()) as T;
 }

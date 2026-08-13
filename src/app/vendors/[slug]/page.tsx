@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Clock3, Heart, MapPin, Search, Star } from "lucide-react";
+import { Clock3, MapPin, Star } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { DemoNotice } from "@/components/demo-notice";
-import { MealCard } from "@/components/meal-card";
+import { ProtectedMutationForm } from "@/components/protected-mutation-form";
+import { VendorMenu } from "@/components/vendor-menu";
+import { VendorOrderAside } from "@/components/vendor-order-aside";
 import { saveVendor } from "@/app/account/actions";
 import { formatMinutes, formatRand } from "@/lib/format";
+import { safeJsonForHtml } from "@/lib/safe-json";
 import { getVendorBySlug } from "@/lib/streetplate-api";
 
 type Props = PageProps<"/vendors/[slug]">;
@@ -37,7 +40,7 @@ export default async function VendorPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonForHtml(structuredData) }}
       />
       <section className={`vendor-hero tone-${vendor.accent}`}>
         <div className="shell vendor-hero-inner">
@@ -60,59 +63,26 @@ export default async function VendorPage({ params }: Props) {
               <span>{formatRand(vendor.deliveryFee)} delivery</span>
             </div>
           </div>
-          <form action={saveVendor}>
-            <input type="hidden" name="vendorId" value={vendor.id} />
-            <input
-              type="hidden"
-              name="path"
-              value={`/vendors/${vendor.slug}`}
+          <div>
+            <ProtectedMutationForm
+              action={saveVendor}
+              buttonClassName="favorite-button"
+              buttonLabel="Save vendor"
+              fields={{
+                vendorId: vendor.id,
+                path: `/vendors/${vendor.slug}`,
+              }}
             />
-            <button className="favorite-button" type="submit">
-              <Heart size={19} aria-hidden="true" /> Save vendor
-            </button>
-          </form>
+          </div>
         </div>
       </section>
 
       <section className="shell menu-layout">
         <div className="menu-main">
           {isDemo && <DemoNotice />}
-          <div className="menu-topbar">
-            <div>
-              <p className="eyebrow">Made fresh</p>
-              <h2>Menu</h2>
-            </div>
-            <label className="menu-search">
-              <Search size={17} aria-hidden="true" />
-              <span className="sr-only">Search this menu</span>
-              <input placeholder="Search this menu" />
-            </label>
-          </div>
-          {meals.length > 0 ? (
-            <div className="meal-grid meal-grid-menu">
-              {meals.map((meal) => (
-                <MealCard key={meal.id} meal={meal} />
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <h3>No menu items are available right now.</h3>
-              <p>Check back when the vendor has published available items.</p>
-            </div>
-          )}
+          <VendorMenu meals={meals} />
         </div>
-        <aside className="order-aside">
-          <p className="eyebrow">Your order</p>
-          <h2>Ready when you are</h2>
-          <p>Add items from one vendor to start your StreetPlate order.</p>
-          <div>
-            <span>Subtotal</span>
-            <strong>{formatRand(0)}</strong>
-          </div>
-          <a href="/cart" className="button button-orange">
-            View cart
-          </a>
-        </aside>
+        <VendorOrderAside vendorId={vendor.id} />
       </section>
     </>
   );

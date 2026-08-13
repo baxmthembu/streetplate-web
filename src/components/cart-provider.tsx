@@ -16,6 +16,9 @@ export type CartItem = {
   vendorName: string;
   name: string;
   description: string;
+  category?: string;
+  accent?: string;
+  imageUrl?: string | null;
   price: number;
   quantity: number;
   notes: string;
@@ -86,13 +89,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (existing) {
         return base.map((entry) =>
           entry.id === item.id
-            ? { ...entry, quantity: entry.quantity + 1 }
+            ? { ...entry, ...item, quantity: entry.quantity + 1 }
             : entry,
         );
       }
       return [...base, { ...item, quantity: 1, notes: "" }];
     });
     return { replacedVendor };
+  }, []);
+
+  const clearCart = useCallback(() => {
+    setItems((current) => (current.length === 0 ? current : []));
   }, []);
 
   const value = useMemo<CartContextValue>(
@@ -124,11 +131,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeItem(id) {
         setItems((current) => current.filter((item) => item.id !== id));
       },
-      clearCart() {
-        setItems([]);
-      },
+      clearCart,
     }),
-    [addItem, hydrated, items],
+    [addItem, clearCart, hydrated, items],
   );
 
   return <CartContext value={value}>{children}</CartContext>;

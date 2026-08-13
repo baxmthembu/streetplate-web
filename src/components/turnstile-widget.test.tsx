@@ -39,6 +39,9 @@ describe("TurnstileWidget", () => {
 
     expect(onVerifiedChange).toHaveBeenCalledWith(true);
     expect(
+      screen.getByRole("group", { name: "Security verification" }),
+    ).toBeInTheDocument();
+    expect(
       container.querySelector<HTMLInputElement>(
         'input[name="cf-turnstile-response"]',
       ),

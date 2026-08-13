@@ -1,4 +1,5 @@
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { RegisterForm } from "@/components/register-form";
 
@@ -9,6 +10,25 @@ type RecruitmentPageProps = {
   benefits: string[];
   steps: string[];
 };
+
+const driverBenefitVisuals = [
+  {
+    src: "/food/driver-benefit-familiar-areas.png",
+    alt: "A delivery rider navigating a familiar neighbourhood",
+  },
+  {
+    src: "/food/driver-benefit-availability.png",
+    alt: "A delivery rider choosing available hours on a phone",
+  },
+  {
+    src: "/food/driver-benefit-offers.png",
+    alt: "A delivery rider viewing delivery offers in the app",
+  },
+  {
+    src: "/food/driver-benefit-completed.png",
+    alt: "A delivery rider reviewing completed deliveries",
+  },
+] as const;
 
 export function RecruitmentPage({
   audience,
@@ -38,9 +58,21 @@ export function RecruitmentPage({
             </a>
           </div>
           <div className="recruitment-art">
-            <span>{isVendor ? "V" : "D"}</span>
-            <strong>{isVendor ? "Local business" : "Delivery partner"}</strong>
-            <small>Application criteria apply</small>
+            <Image
+              src={
+                isVendor
+                  ? "/food/vendor-recruitment-flat.png"
+                  : "/food/driver-recruitment-flat.png"
+              }
+              alt={
+                isVendor
+                  ? "A local food vendor serving a freshly prepared takeaway meal from a township container kitchen"
+                  : "A helmeted StreetPlate delivery partner riding a scooter through a township neighbourhood"
+              }
+              fill
+              priority
+              sizes="(max-width: 800px) 100vw, 40vw"
+            />
           </div>
         </div>
       </section>
@@ -53,12 +85,29 @@ export function RecruitmentPage({
           </div>
         </div>
         <div className="benefit-grid">
-          {benefits.map((benefit) => (
-            <article key={benefit}>
-              <Check aria-hidden="true" />
-              <h3>{benefit}</h3>
-            </article>
-          ))}
+          {benefits.map((benefit, index) => {
+            const visual = isVendor ? undefined : driverBenefitVisuals[index];
+            return (
+              <article
+                className={visual ? "benefit-visual" : undefined}
+                key={benefit}
+              >
+                {visual ? (
+                  <div className="benefit-image">
+                    <Image
+                      src={visual.src}
+                      alt={visual.alt}
+                      fill
+                      sizes="(max-width: 680px) 100vw, (max-width: 980px) 50vw, 25vw"
+                    />
+                  </div>
+                ) : (
+                  <Check aria-hidden="true" />
+                )}
+                <h3>{benefit}</h3>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -78,23 +127,18 @@ export function RecruitmentPage({
           </div>
           <aside className="application-gate">
             <ShieldCheck size={34} aria-hidden="true" />
-            <h2>Secure onboarding comes first</h2>
-            <p>
-              Identity, food-safety and banking documents must use private
-              storage and signed access. The current Supabase project has no
-              storage buckets, so the application form will only be enabled
-              after a reviewed migration and private-storage design receive
-              explicit approval.
-            </p>
             <Link href="/legal/privacy">Read the privacy approach</Link>
             <hr />
             <h3>Create your shared StreetPlate account</h3>
-            <p>
-              This uses the existing mobile/backend registration contract.
-              Document verification remains gated until private storage is
-              approved.
-            </p>
             <RegisterForm role={audience} />
+            {!isVendor && (
+              <Link
+                className="returning-account-link"
+                href="/sign-in?next=/driver"
+              >
+                Already a StreetPlate driver? Sign in to your account.
+              </Link>
+            )}
           </aside>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { demoMeals, demoVendors, type Meal, type Vendor } from "./site-data";
+import { createClient } from "./supabase/server";
 
 type ApiVendor = {
   id: string;
@@ -36,6 +37,12 @@ type VendorDetailResponse = {
   menu?: ApiMeal[];
 };
 
+type MarketplaceResult = {
+  vendors: Vendor[];
+  meals: Meal[];
+  isDemo: boolean;
+};
+
 function apiBase(): string | null {
   const value = process.env.STREETPLATE_API_URL?.replace(/\/$/, "");
   if (!value) return null;
@@ -67,13 +74,31 @@ function mapVendor(vendor: ApiVendor, index: number): Vendor {
     eta: [eta, eta + 15],
     isOpen: vendor.is_open,
     accent: ["coral", "gold", "leaf"][index % 3],
-    coverImage: vendor.cover_image ?? null,
+    coverImage: imageUrl(vendor.cover_image ?? null),
     latitude: vendor.latitude ?? null,
     longitude: vendor.longitude ?? null,
     deliveryRadius:
       vendor.delivery_radius_km == null
         ? null
         : Number(vendor.delivery_radius_km),
+  };
+}
+
+function mapMeal(meal: ApiMeal, vendor: Vendor, index: number): Meal {
+  return {
+    id: meal.id,
+    vendorId: vendor.id,
+    vendorSlug: vendor.slug,
+    vendorName: vendor.name,
+    name: meal.name,
+    description: meal.description ?? "Prepared fresh by this vendor.",
+    category: meal.category ?? "Menu",
+    price: Number(meal.price),
+    accent: ["coral", "gold", "leaf", "sky"][index % 4],
+    symbol: meal.name.slice(0, 1).toUpperCase(),
+    imageUrl: imageUrl(meal.image_url),
+    preparationTime: meal.preparation_time ?? 15,
+    isAvailable: meal.is_available,
   };
 }
 
@@ -84,69 +109,99 @@ function toSlug(value: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
+async function getMarketplaceFromApi(
+  apiUrl: string,
+): Promise<MarketplaceResult> {
+  const response = await fetch(`${apiUrl}/vendors`, {
+    next: { revalidate: 60 },
+  });
+  if (!response.ok)
+    throw new Error(`Vendors request failed: ${response.status}`);
+
+  const payload = (await response.json()) as { vendors?: ApiVendor[] };
+  const apiVendors = payload.vendors ?? [];
+  const details = await Promise.all(
+    apiVendors.map(async (vendor) => {
+      const detailResponse = await fetch(`${apiUrl}/vendors/${vendor.id}`, {
+        next: { revalidate: 60 },
+      });
+      if (!detailResponse.ok)
+        throw new Error(`Vendor details failed: ${detailResponse.status}`);
+      return (await detailResponse.json()) as VendorDetailResponse;
+    }),
+  );
+
+  const vendors = details.map(({ vendor }, index) => mapVendor(vendor, index));
+  const vendorsById = new Map(vendors.map((vendor) => [vendor.id, vendor]));
+  const meals = details.flatMap(({ menu = [] }) =>
+    menu.flatMap((meal, index) => {
+      const vendor = vendorsById.get(meal.vendor_id);
+      return vendor ? [mapMeal(meal, vendor, index)] : [];
+    }),
+  );
+
+  return { vendors, meals, isDemo: false };
+}
+
+async function getMarketplaceFromSupabase(): Promise<MarketplaceResult | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const [
+    { data: vendorRows, error: vendorsError },
+    { data: menuRows, error: menuError },
+  ] = await Promise.all([
+    supabase
+      .from("vendors")
+      .select(
+        "id, business_name, description, rating, total_reviews, is_open, cover_image, latitude, longitude, delivery_fee, estimated_delivery_time, address, category_tags, delivery_radius_km",
+      ),
+    supabase
+      .from("menu_items")
+      .select(
+        "id, vendor_id, name, description, price, image_url, category, preparation_time, is_available",
+      )
+      .eq("is_available", true),
+  ]);
+
+  if (vendorsError || menuError) return null;
+
+  const vendors = (vendorRows as ApiVendor[]).map(mapVendor);
+  const vendorsById = new Map(vendors.map((vendor) => [vendor.id, vendor]));
+  const meals = (menuRows as ApiMeal[]).flatMap((meal, index) => {
+    const vendor = vendorsById.get(meal.vendor_id);
+    return vendor ? [mapMeal(meal, vendor, index)] : [];
+  });
+
+  return { vendors, meals, isDemo: false };
+}
+
 export async function getVendors(): Promise<{
   vendors: Vendor[];
   isDemo: boolean;
 }> {
   const apiUrl = apiBase();
-  if (!apiUrl) return { vendors: demoVendors, isDemo: true };
-
-  try {
-    const response = await fetch(`${apiUrl}/vendors`, {
-      next: { revalidate: 60 },
-    });
-    if (!response.ok)
-      throw new Error(`Vendors request failed: ${response.status}`);
-
-    const payload = (await response.json()) as { vendors?: ApiVendor[] };
-    const vendors = (payload.vendors ?? []).map(mapVendor);
-
-    return { vendors, isDemo: false };
-  } catch {
-    return { vendors: demoVendors, isDemo: true };
+  if (apiUrl) {
+    try {
+      const result = await getMarketplaceFromApi(apiUrl);
+      return { vendors: result.vendors, isDemo: false };
+    } catch {}
   }
+
+  const supabaseResult = await getMarketplaceFromSupabase();
+  if (supabaseResult) return { vendors: supabaseResult.vendors, isDemo: false };
+
+  return { vendors: demoVendors, isDemo: true };
 }
 
 export async function getVendorBySlug(
   slug: string,
 ): Promise<{ vendor: Vendor | null; meals: Meal[]; isDemo: boolean }> {
-  const { vendors, isDemo } = await getVendors();
+  const { vendors, meals, isDemo } = await getMarketplace();
   const vendor = vendors.find((item) => item.slug === slug) ?? null;
-
-  if (vendor && !isDemo) {
-    const apiUrl = apiBase();
-    if (!apiUrl) return { vendor, meals: [], isDemo: false };
-    try {
-      const response = await fetch(`${apiUrl}/vendors/${vendor.id}`, {
-        next: { revalidate: 60 },
-      });
-      if (!response.ok) throw new Error("Vendor details unavailable");
-      const payload = (await response.json()) as VendorDetailResponse;
-      const safeVendor = mapVendor(payload.vendor, 0);
-      const meals = (payload.menu ?? []).map((meal, index): Meal => ({
-        id: meal.id,
-        vendorId: vendor.id,
-        vendorSlug: vendor.slug,
-        vendorName: safeVendor.name,
-        name: meal.name,
-        description: meal.description ?? "Prepared fresh by this vendor.",
-        category: meal.category ?? "Menu",
-        price: Number(meal.price),
-        accent: ["coral", "gold", "leaf", "sky"][index % 4],
-        symbol: meal.name.slice(0, 1).toUpperCase(),
-        imageUrl: imageUrl(meal.image_url),
-        preparationTime: meal.preparation_time ?? 15,
-        isAvailable: meal.is_available,
-      }));
-      return { vendor: safeVendor, meals, isDemo: false };
-    } catch {
-      return { vendor, meals: [], isDemo: false };
-    }
-  }
-
   return {
     vendor,
-    meals: isDemo ? demoMeals.filter((meal) => meal.vendorSlug === slug) : [],
+    meals: vendor ? meals.filter((meal) => meal.vendorId === vendor.id) : [],
     isDemo,
   };
 }
@@ -156,16 +211,15 @@ export async function getMarketplace(): Promise<{
   meals: Meal[];
   isDemo: boolean;
 }> {
-  const result = await getVendors();
-  if (result.isDemo) return { ...result, meals: demoMeals };
-  const details = await Promise.all(
-    result.vendors.map((vendor) => getVendorBySlug(vendor.slug)),
+  const apiUrl = apiBase();
+  if (apiUrl) {
+    try {
+      return await getMarketplaceFromApi(apiUrl);
+    } catch {}
+  }
+
+  const supabaseResult = await getMarketplaceFromSupabase();
+  return (
+    supabaseResult ?? { vendors: demoVendors, meals: demoMeals, isDemo: true }
   );
-  return {
-    vendors: details.map(
-      (detail, index) => detail.vendor ?? result.vendors[index],
-    ),
-    meals: details.flatMap((detail) => detail.meals),
-    isDemo: false,
-  };
 }

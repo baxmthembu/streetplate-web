@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
 import { getSafeInternalPath } from "@/lib/auth-navigation";
 import { createClient } from "@/lib/supabase/server";
+import { roleHomePath } from "@/lib/auth-navigation";
 
 export const metadata: Metadata = { title: "Finish account setup" };
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ export default async function CompleteProfilePage({
     .eq("id", user.id)
     .maybeSingle();
   if (profile) {
-    redirect(nextPath ?? (profile.role === "driver" ? "/driver" : "/account"));
+    redirect(nextPath ?? roleHomePath(profile.role));
   }
 
   return (

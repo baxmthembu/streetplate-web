@@ -1,15 +1,39 @@
-import { MapPin, Menu, Search, UserRound } from "lucide-react";
+import { MapPin, Menu, Search } from "lucide-react";
 import Link from "next/link";
+
+import { signOut } from "@/app/auth/actions";
 
 import { Brand } from "./brand";
 import { CartLink } from "./cart-link";
 
-export function SiteHeader() {
+type AccountRole = "customer" | "vendor" | "driver" | "admin" | null;
+
+export function SiteHeader({
+  isSignedIn,
+  role = null,
+}: {
+  isSignedIn: boolean;
+  role?: AccountRole;
+}) {
+  const accountHref =
+    role === "vendor"
+      ? "/vendor/account"
+      : role === "driver"
+        ? "/driver/profile"
+        : "/account";
+  const ordersHref =
+    role === "vendor"
+      ? "/vendor/orders"
+      : role === "driver"
+        ? "/driver/history"
+        : "/account#order-history";
   return (
     <>
       <div className="announcement">
         <p>Made for local flavour, built for South African communities.</p>
-        <Link href="/join">Join StreetPlate</Link>
+        <Link href={isSignedIn ? ordersHref : "/join"}>
+          {isSignedIn ? "View your orders" : "Join StreetPlate"}
+        </Link>
       </div>
       <header className="site-header">
         <div className="shell header-inner">
@@ -32,13 +56,36 @@ export function SiteHeader() {
               <Search size={20} aria-hidden="true" />
             </Link>
             <CartLink />
-            <Link
-              className="icon-link desktop-account"
-              href="/account"
-              aria-label="Open your account"
-            >
-              <UserRound size={20} aria-hidden="true" />
-            </Link>
+            <nav className="desktop-auth-nav" aria-label="Account navigation">
+              {isSignedIn ? (
+                <>
+                  <Link className="header-auth-link" href={accountHref}>
+                    {role === "vendor"
+                      ? "Vendor"
+                      : role === "driver"
+                        ? "Driver"
+                        : "Account"}
+                  </Link>
+                  <Link className="header-auth-link" href={ordersHref}>
+                    Orders
+                  </Link>
+                  <form className="header-sign-out-form" action={signOut}>
+                    <button className="header-auth-link" type="submit">
+                      Sign out
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <Link className="header-auth-link" href="/sign-in">
+                    Sign in
+                  </Link>
+                  <Link className="header-create-account" href="/join">
+                    Create account
+                  </Link>
+                </>
+              )}
+            </nav>
             <Link
               className="icon-link mobile-menu"
               href="#footer-navigation"

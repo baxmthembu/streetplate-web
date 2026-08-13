@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 
 import { Cart } from "@/components/cart";
 import { DemoNotice } from "@/components/demo-notice";
+import { getMarketplace } from "@/lib/streetplate-api";
 
 export const metadata: Metadata = { title: "Your cart" };
 
-export default function CartPage() {
+export default async function CartPage() {
+  const { meals, isDemo } = await getMarketplace();
+
   return (
     <>
       <section className="page-hero compact-hero">
@@ -15,8 +18,8 @@ export default function CartPage() {
         </div>
       </section>
       <section className="shell content-page">
-        <DemoNotice />
-        <Cart />
+        {isDemo && <DemoNotice />}
+        <Cart menuItems={meals} />
       </section>
     </>
   );

@@ -160,6 +160,10 @@ export const categories = [
 const foodImageRules = [
   { terms: ["bunny"], image: "/food/bunny-chow.png" },
   {
+    terms: ["cake", "dessert", "pudding", "malva"],
+    image: "/food/join-township-malva.png",
+  },
+  {
     terms: ["amagwinya", "vetkoek", "fat cake"],
     image: "/food/amagwinya-mince.png",
   },

@@ -12,6 +12,7 @@ export function Brand() {
           width={74}
           height={74}
           sizes="74px"
+          loading="eager"
           unoptimized
         />
       </span>

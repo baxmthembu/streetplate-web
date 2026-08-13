@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import {
   addAddress,
@@ -13,13 +13,17 @@ const initialState: AccountActionState = { message: "" };
 
 export function ProfileForm({ profile }: { profile: CustomerProfile }) {
   const [state, action, pending] = useActionState(updateProfile, initialState);
+  const [name, setName] = useState(profile.name);
+  const [phone, setPhone] = useState(profile.phone ?? "");
   return (
     <form action={action} className="account-form">
       <label>
         Name
         <input
           name="name"
-          defaultValue={profile.name}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          aria-invalid={state.field === "name"}
           minLength={2}
           maxLength={100}
           required
@@ -30,7 +34,9 @@ export function ProfileForm({ profile }: { profile: CustomerProfile }) {
         <input
           name="phone"
           type="tel"
-          defaultValue={profile.phone ?? ""}
+          value={phone}
+          onChange={(event) => setPhone(event.target.value)}
+          aria-invalid={state.field === "phone"}
           maxLength={20}
         />
       </label>
@@ -51,6 +57,15 @@ export function ProfileForm({ profile }: { profile: CustomerProfile }) {
 
 export function AddressForm() {
   const [state, action, pending] = useActionState(addAddress, initialState);
+  const [values, setValues] = useState({
+    label: "",
+    address: "",
+    latitude: "",
+    longitude: "",
+  });
+  function updateValue(field: keyof typeof values, value: string) {
+    setValues((current) => ({ ...current, [field]: value }));
+  }
   return (
     <form action={action} className="account-form address-form">
       <label>
@@ -59,6 +74,9 @@ export function AddressForm() {
           name="label"
           placeholder="Home or Work"
           maxLength={50}
+          value={values.label}
+          onChange={(event) => updateValue("label", event.target.value)}
+          aria-invalid={state.field === "label"}
           required
         />
       </label>
@@ -68,17 +86,36 @@ export function AddressForm() {
           name="address"
           autoComplete="street-address"
           maxLength={500}
+          value={values.address}
+          onChange={(event) => updateValue("address", event.target.value)}
+          aria-invalid={state.field === "address"}
           required
         />
       </label>
       <div className="coordinate-grid">
         <label>
           Latitude
-          <input name="latitude" type="number" step="any" required />
+          <input
+            name="latitude"
+            type="number"
+            step="any"
+            value={values.latitude}
+            onChange={(event) => updateValue("latitude", event.target.value)}
+            aria-invalid={state.field === "latitude"}
+            required
+          />
         </label>
         <label>
           Longitude
-          <input name="longitude" type="number" step="any" required />
+          <input
+            name="longitude"
+            type="number"
+            step="any"
+            value={values.longitude}
+            onChange={(event) => updateValue("longitude", event.target.value)}
+            aria-invalid={state.field === "longitude"}
+            required
+          />
         </label>
       </div>
       <label className="consent-check">

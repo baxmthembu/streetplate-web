@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { deleteAddress, removeVendor } from "@/app/account/actions";
 import { signOut } from "@/app/auth/actions";
 import { AddressForm, ProfileForm } from "@/components/account-forms";
+import { ProtectedMutationForm } from "@/components/protected-mutation-form";
 import { StreetPlateApiError, streetPlateApi } from "@/lib/backend";
 import type {
   CustomerOrder,
@@ -23,9 +24,50 @@ type FavoriteVendor = {
 };
 
 export default async function AccountPage() {
+  let authenticatedUser: CustomerProfile | undefined;
+  try {
+    const response = await streetPlateApi<{ user: CustomerProfile }>(
+      "/auth/profile",
+    );
+    authenticatedUser = response.user;
+  } catch (error) {
+    if (error instanceof StreetPlateApiError && error.status === 401) {
+      redirect(
+        error.code === "PROFILE_INCOMPLETE"
+          ? "/complete-profile?next=/account"
+          : "/sign-in",
+      );
+    }
+    return (
+      <section className="shell content-page content-narrow">
+        <h1>Your account is temporarily unavailable</h1>
+        <p>{error instanceof Error ? error.message : "Try again shortly."}</p>
+      </section>
+    );
+  }
+
+  if (authenticatedUser.role === "driver") redirect("/driver");
+  if (authenticatedUser.role === "vendor") redirect("/vendor");
+  if (authenticatedUser.role !== "customer") {
+    return (
+      <section className="shell content-page content-narrow">
+        <p className="eyebrow">{authenticatedUser.role} account</p>
+        <h1>
+          Continue in your StreetPlate {authenticatedUser.role} application
+        </h1>
+        <p>
+          Your existing operational application remains the canonical workspace
+          for {authenticatedUser.role} tools.
+        </p>
+        <form action={signOut}>
+          <button className="button button-dark">Sign out</button>
+        </form>
+      </section>
+    );
+  }
+
   let accountData:
     | [
-        { user: CustomerProfile },
         { addresses: SavedAddress[] },
         { favorites: FavoriteVendor[] },
         { orders: CustomerOrder[] },
@@ -34,7 +76,6 @@ export default async function AccountPage() {
   let loadError = "";
   try {
     accountData = await Promise.all([
-      streetPlateApi<{ user: CustomerProfile }>("/auth/profile"),
       streetPlateApi<{ addresses: SavedAddress[] }>("/customers/addresses"),
       streetPlateApi<{ favorites: FavoriteVendor[] }>(
         "/customers/favorites/vendors",
@@ -54,23 +95,8 @@ export default async function AccountPage() {
       </section>
     );
 
-  const [{ user }, { addresses }, { favorites }, { orders }] = accountData;
-  if (user.role !== "customer") {
-    return (
-      <section className="shell content-page content-narrow">
-        <p className="eyebrow">{user.role} account</p>
-        <h1>Continue in your StreetPlate {user.role} application</h1>
-        <p>
-          This website currently provides the customer ordering portal. Your
-          existing operational application remains the canonical workspace for{" "}
-          {user.role} tools.
-        </p>
-        <form action={signOut}>
-          <button className="button button-dark">Sign out</button>
-        </form>
-      </section>
-    );
-  }
+  const [{ addresses }, { favorites }, { orders }] = accountData;
+  const user = authenticatedUser;
   const activeOrders = orders.filter(
     (order) => !["delivered", "cancelled"].includes(order.status),
   );
@@ -78,13 +104,9 @@ export default async function AccountPage() {
     <section className="shell content-page account-page">
       <div className="account-heading">
         <div>
-          <p className="eyebrow">Signed in</p>
-          <h1>Hello, {user.name}</h1>
-          <p>{user.email}</p>
+          <h2 className="eyebrow">Hello, {user.name}</h2>
+          <h1>{user.email}</h1>
         </div>
-        <form action={signOut}>
-          <button className="button button-light">Sign out</button>
-        </form>
       </div>
       <div className="account-grid">
         <article className="account-panel">
@@ -106,10 +128,12 @@ export default async function AccountPage() {
                     </strong>
                     <p>{address.address}</p>
                   </div>
-                  <form action={deleteAddress}>
-                    <input type="hidden" name="id" value={address.id} />
-                    <button className="text-danger">Remove</button>
-                  </form>
+                  <ProtectedMutationForm
+                    action={deleteAddress}
+                    buttonClassName="text-danger"
+                    buttonLabel="Remove"
+                    fields={{ id: address.id }}
+                  />
                 </div>
               ))}
             </div>
@@ -157,10 +181,12 @@ export default async function AccountPage() {
                     <strong>{vendor.business_name}</strong>
                     <p>{vendor.description}</p>
                   </div>
-                  <form action={removeVendor}>
-                    <input type="hidden" name="vendorId" value={vendor.id} />
-                    <button className="text-danger">Remove</button>
-                  </form>
+                  <ProtectedMutationForm
+                    action={removeVendor}
+                    buttonClassName="text-danger"
+                    buttonLabel="Remove"
+                    fields={{ vendorId: vendor.id }}
+                  />
                 </div>
               ))}
             </div>
@@ -175,9 +201,9 @@ export default async function AccountPage() {
               {orders.map((order) => (
                 <Link href={`/orders/${order.id}`} key={order.id}>
                   <strong>{order.order_number ?? order.id.slice(0, 8)}</strong>
-                  <span>
+                  <span className="order-history-meta">
                     {order.status.replaceAll("_", " ")} ·{" "}
-                    {formatRand(Number(order.total))}
+                    <span>{formatRand(Number(order.total))}</span>
                   </span>
                 </Link>
               ))}

@@ -13,7 +13,7 @@ export default function DriverRecruitmentPage() {
     <RecruitmentPage
       audience="driver"
       title="Help local food travel further."
-      description="Apply to deliver in your area. Earnings vary by demand, availability, accepted offers and completed deliveries—StreetPlate does not guarantee earnings."
+      description="Apply to deliver in your area. Earnings vary by demand, availability, accepted offers and completed deliveries. StreetPlate does not guarantee earnings."
       benefits={[
         "Deliver in familiar areas",
         "Choose when you are available",

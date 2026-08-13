@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useActionState } from "react";
@@ -28,12 +29,21 @@ const initialState: AccountActionState = { message: "" };
 
 function CancelForm({ orderId }: { orderId: string }) {
   const [state, action, pending] = useActionState(cancelOrder, initialState);
+  const [reason, setReason] = useState("Plans changed");
   return (
     <form action={action} className="inline-action">
       <input type="hidden" name="orderId" value={orderId} />
       <label>
         Cancellation reason
-        <input name="reason" maxLength={300} defaultValue="Plans changed" />
+        <input
+          name="reason"
+          minLength={3}
+          maxLength={300}
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+          aria-invalid={state.field === "reason"}
+          required
+        />
       </label>
       {state.message && (
         <p
@@ -60,6 +70,8 @@ function ReviewForm({
   targetId: string;
 }) {
   const [state, action, pending] = useActionState(submitReview, initialState);
+  const [rating, setRating] = useState("5");
+  const [comment, setComment] = useState("");
   return (
     <form action={action} className="review-form">
       <input type="hidden" name="orderId" value={order.id} />
@@ -67,7 +79,12 @@ function ReviewForm({
       <input type="hidden" name="targetType" value={targetType} />
       <label>
         {targetType === "vendor" ? "Vendor" : "Driver"} rating
-        <select name="rating" defaultValue="5">
+        <select
+          name="rating"
+          value={rating}
+          onChange={(event) => setRating(event.target.value)}
+          aria-invalid={state.field === "rating"}
+        >
           <option value="5">5 — Excellent</option>
           <option value="4">4 — Good</option>
           <option value="3">3 — Okay</option>
@@ -77,7 +94,13 @@ function ReviewForm({
       </label>
       <label>
         Comment
-        <textarea name="comment" maxLength={1000} />
+        <textarea
+          name="comment"
+          maxLength={1000}
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+          aria-invalid={state.field === "comment"}
+        />
       </label>
       {state.message && (
         <p
@@ -103,12 +126,34 @@ export function OrderTracker({
   const [connection, setConnection] = useState<
     "connecting" | "live" | "polling"
   >("connecting");
+  const [refreshNotice, setRefreshNotice] = useState("");
   const refresh = useCallback(async () => {
-    const response = await fetch(`/api/orders/${order.id}`, {
-      cache: "no-store",
-    });
-    if (response.ok)
-      setOrder(((await response.json()) as { order: CustomerOrder }).order);
+    try {
+      const response = await fetch(`/api/orders/${order.id}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        setRefreshNotice(
+          response.status === 401
+            ? "Your session has expired. Sign in again to continue receiving live updates."
+            : "Live refresh is temporarily unavailable. StreetPlate will retry automatically.",
+        );
+        setConnection("polling");
+        return;
+      }
+
+      const payload = (await response.json()) as { order: CustomerOrder };
+      setOrder(payload.order);
+      setRefreshNotice("");
+    } catch {
+      // A dev-server restart, brief connection loss, or offline browser should
+      // not surface as an unhandled runtime error. Keep the last verified
+      // order visible and let the existing polling timer retry safely.
+      setConnection("polling");
+      setRefreshNotice(
+        "Live refresh is temporarily unavailable. StreetPlate will retry automatically.",
+      );
+    }
   }, [order.id]);
 
   useEffect(() => {
@@ -170,6 +215,11 @@ export function OrderTracker({
               : "Connecting"}
         </span>
       </div>
+      {refreshNotice && (
+        <p role="status" className="small-print">
+          {refreshNotice}
+        </p>
+      )}
       {order.status === "cancelled" ? (
         <div className="legal-warning">This order was cancelled.</div>
       ) : (
@@ -179,7 +229,13 @@ export function OrderTracker({
               key={status}
               className={index <= currentIndex ? "complete" : ""}
             >
-              <span>{index < currentIndex ? "✓" : index + 1}</span>
+              <span>
+                {index < currentIndex ? (
+                  <Check size={16} strokeWidth={3} aria-hidden="true" />
+                ) : (
+                  index + 1
+                )}
+              </span>
               <strong>{orderStatusCopy[status].label}</strong>
             </li>
           ))}

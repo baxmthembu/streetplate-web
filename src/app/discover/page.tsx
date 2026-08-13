@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { MapPin, Search } from "lucide-react";
 
 import { DemoNotice } from "@/components/demo-notice";
+import { DiscoverSearchForm } from "@/components/discover-search-form";
 import { MarketplaceExplorer } from "@/components/marketplace-explorer";
 import { getMarketplace } from "@/lib/streetplate-api";
 
@@ -11,7 +11,18 @@ export const metadata: Metadata = {
     "Explore local food vendors, kota, home-cooked meals and shisanyama near you.",
 };
 
-export default async function DiscoverPage() {
+export default async function DiscoverPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    location?: string;
+    latitude?: string;
+    longitude?: string;
+  }>;
+}) {
+  const params = await searchParams;
   const { vendors, meals, isDemo } = await getMarketplace();
 
   return (
@@ -24,31 +35,12 @@ export default async function DiscoverPage() {
             Search local vendors and meals. Set an address to confirm delivery
             availability, distance and accurate fees.
           </p>
-          <form className="discover-search">
-            <div>
-              <Search size={19} aria-hidden="true" />
-              <label className="sr-only" htmlFor="discover-query">
-                Search vendors or meals
-              </label>
-              <input
-                id="discover-query"
-                name="q"
-                placeholder="Search vendors or meals"
-              />
-            </div>
-            <div>
-              <MapPin size={19} aria-hidden="true" />
-              <label className="sr-only" htmlFor="discover-location">
-                Delivery location
-              </label>
-              <input
-                id="discover-location"
-                name="location"
-                placeholder="Delivery location"
-              />
-            </div>
-            <button type="submit">Search</button>
-          </form>
+          <DiscoverSearchForm
+            initialQuery={params.q}
+            initialLocation={params.location}
+            initialLatitude={params.latitude}
+            initialLongitude={params.longitude}
+          />
         </div>
       </section>
 
@@ -57,7 +49,13 @@ export default async function DiscoverPage() {
           <DemoNotice />
         </div>
       )}
-      <MarketplaceExplorer vendors={vendors} meals={meals} />
+      <MarketplaceExplorer
+        key={`${params.q ?? ""}:${params.category ?? ""}`}
+        vendors={vendors}
+        meals={meals}
+        initialQuery={params.q}
+        initialCategory={params.category}
+      />
     </>
   );
 }

@@ -18,6 +18,16 @@ export default async function CheckoutPage() {
   } catch (error) {
     if (error instanceof StreetPlateApiError && error.status === 401)
       redirect("/sign-in?next=/checkout");
+    return (
+      <section className="shell content-page content-narrow">
+        <p className="eyebrow">Checkout unavailable</p>
+        <h1>We could not load checkout</h1>
+        <p>
+          StreetPlate could not verify your session or saved addresses. Please
+          try again shortly.
+        </p>
+      </section>
+    );
   }
   return (
     <section className="shell content-page">

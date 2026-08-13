@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { registrationConflict, signInFailure } from "@/lib/auth-error-messages";
+import {
+  registrationConflict,
+  registrationValidationFailure,
+  signInFailure,
+} from "@/lib/auth-error-messages";
 
 describe("auth error messages", () => {
   it("keeps invalid credentials enumeration-safe", () => {
@@ -46,6 +50,28 @@ describe("auth error messages", () => {
         message: "Conflict",
         status: 409,
       }),
+    ).toBeNull();
+  });
+
+  it("maps backend validation paths to the matching vendor input", () => {
+    expect(registrationValidationFailure("phone", "vendor")).toEqual({
+      message:
+        "Enter a valid South African phone number, for example 071 234 5678.",
+      field: "phone",
+    });
+    expect(registrationValidationFailure("business_name", "vendor")).toEqual({
+      message: "Enter your business name between 2 and 100 characters.",
+      field: "name",
+    });
+    expect(registrationValidationFailure("description", "vendor")).toEqual({
+      message: "Tell us about your food business in 1 to 1,000 characters.",
+      field: "description",
+    });
+  });
+
+  it("does not assign an internal backend field to a visible input", () => {
+    expect(
+      registrationValidationFailure("turnstile_token", "vendor"),
     ).toBeNull();
   });
 });

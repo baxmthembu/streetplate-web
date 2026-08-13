@@ -24,6 +24,9 @@ export function AddToCartButton({ meal }: { meal: Meal }) {
             vendorName: meal.vendorName,
             name: meal.name,
             description: meal.description,
+            category: meal.category,
+            accent: meal.accent,
+            imageUrl: meal.imageUrl,
             price: meal.price,
           });
           setMessage(

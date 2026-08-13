@@ -3,9 +3,7 @@ import {
   Bike,
   Check,
   ChevronRight,
-  LocateFixed,
   MapPin,
-  Search,
   ShieldCheck,
   Store,
   UtensilsCrossed,
@@ -14,7 +12,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DemoNotice } from "@/components/demo-notice";
+import { CurrentLocationButton } from "@/components/current-location-button";
 import { MealCard } from "@/components/meal-card";
+import { NewsletterForm } from "@/components/newsletter-form";
 import { VendorCard } from "@/components/vendor-card";
 import { categories } from "@/lib/site-data";
 import { getMarketplace } from "@/lib/streetplate-api";
@@ -45,9 +45,9 @@ export default async function Home() {
       <section className="hero">
         <div className="shell hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow">
+            {/*<p className="eyebrow hero-eyebrow">
               Food delivery, rooted in community
-            </p>
+            </p>*/}
             <h1>Local food, delivered from your community.</h1>
             <p className="hero-lead">
               Discover home kitchens, township vendors, spaza shops and local
@@ -63,18 +63,19 @@ export default async function Home() {
                 name="location"
                 placeholder="Enter your delivery location"
                 autoComplete="street-address"
+                required
               />
               <button type="submit">
                 Find food <ArrowRight size={18} aria-hidden="true" />
               </button>
             </form>
             <div className="hero-actions">
-              <Link href="/discover" className="text-link">
-                <LocateFixed size={17} aria-hidden="true" />
-                Use my current location
-              </Link>
+              <CurrentLocationButton />
               <span>or</span>
-              <Link href="/join" className="text-link">
+              <Link
+                href={{ pathname: "/sign-in", query: { next: "/account" } }}
+                className="text-link"
+              >
                 Sign in for saved addresses
               </Link>
             </div>
@@ -103,7 +104,7 @@ export default async function Home() {
       <section className="section shell" aria-labelledby="categories-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Explore by craving</p>
+            {/*<p className="eyebrow">Explore by craving</p>*/}
             <h2 id="categories-title">Local favourites</h2>
           </div>
           <Link href="/discover">
@@ -136,7 +137,7 @@ export default async function Home() {
         <div className="shell">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Close to you</p>
+              {/*<p className="eyebrow">Close to you</p>*/}
               <h2>Nearby vendors</h2>
             </div>
             <Link href="/discover">
@@ -155,7 +156,7 @@ export default async function Home() {
       <section className="section shell">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Popular right now</p>
+            {/*<p className="eyebrow">Popular right now</p>*/}
             <h2>Meals worth discovering</h2>
           </div>
           <Link href="/discover">
@@ -274,20 +275,7 @@ export default async function Home() {
             <p className="eyebrow">Stay close to the plate</p>
             <h2>Local flavour, new neighbourhoods, useful updates.</h2>
           </div>
-          <form>
-            <label className="sr-only" htmlFor="newsletter-email">
-              Email address
-            </label>
-            <input
-              id="newsletter-email"
-              type="email"
-              placeholder="Email address"
-              required
-            />
-            <button type="submit">
-              Join the waitlist <Search size={18} aria-hidden="true" />
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
       </section>
     </>

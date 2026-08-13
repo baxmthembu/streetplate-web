@@ -27,3 +27,9 @@ export function safeInternalPath(
 ): string {
   return getSafeInternalPath(value) ?? fallback;
 }
+
+export function roleHomePath(role: string | null | undefined): string {
+  if (role === "vendor") return "/vendor";
+  if (role === "driver") return "/driver";
+  return "/account";
+}

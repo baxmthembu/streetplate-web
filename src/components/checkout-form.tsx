@@ -6,6 +6,7 @@ import { useActionState, useEffect, useState } from "react";
 
 import { createOrder, type CheckoutState } from "@/app/checkout/actions";
 import { useCart } from "@/components/cart-provider";
+import { CheckoutSkeleton } from "@/components/page-skeletons";
 import { formatRand } from "@/lib/format";
 import type { SavedAddress } from "@/lib/commerce-types";
 
@@ -18,6 +19,20 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
   const [locationMessage, setLocationMessage] = useState("");
   const defaultAddress =
     addresses.find((address) => address.is_default) ?? addresses[0];
+  const [values, setValues] = useState({
+    address: defaultAddress?.address ?? "",
+    latitude:
+      defaultAddress?.latitude == null ? "" : String(defaultAddress.latitude),
+    longitude:
+      defaultAddress?.longitude == null ? "" : String(defaultAddress.longitude),
+    instructions: "",
+    tip: "0",
+  });
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  function updateValue(field: keyof typeof values, value: string) {
+    setValues((current) => ({ ...current, [field]: value }));
+  }
 
   useEffect(() => {
     if (state.orderId) {
@@ -28,7 +43,7 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
     }
   }, [clearCart, router, state.orderId]);
 
-  if (!hydrated) return <div className="empty-state">Loading checkout…</div>;
+  if (!hydrated) return <CheckoutSkeleton />;
   if (items.length === 0 && !state.orderId) {
     return (
       <div className="empty-state">
@@ -65,18 +80,13 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
                 const selected = addresses.find(
                   (entry) => entry.id === event.target.value,
                 );
-                const form = event.currentTarget.form;
-                if (selected && form) {
-                  (
-                    form.elements.namedItem("address") as HTMLInputElement
-                  ).value = selected.address;
-                  (
-                    form.elements.namedItem("latitude") as HTMLInputElement
-                  ).value = String(selected.latitude);
-                  (
-                    form.elements.namedItem("longitude") as HTMLInputElement
-                  ).value = String(selected.longitude);
-                }
+                if (selected)
+                  setValues((current) => ({
+                    ...current,
+                    address: selected.address,
+                    latitude: String(selected.latitude),
+                    longitude: String(selected.longitude),
+                  }));
               }}
             >
               {addresses.map((address) => (
@@ -91,7 +101,9 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
           <span>Street address</span>
           <input
             name="address"
-            defaultValue={defaultAddress?.address ?? ""}
+            value={values.address}
+            onChange={(event) => updateValue("address", event.target.value)}
+            aria-invalid={state.field === "address"}
             required
             maxLength={500}
             autoComplete="street-address"
@@ -104,7 +116,9 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
               name="latitude"
               type="number"
               step="any"
-              defaultValue={defaultAddress?.latitude ?? ""}
+              value={values.latitude}
+              onChange={(event) => updateValue("latitude", event.target.value)}
+              aria-invalid={state.field === "latitude"}
               required
             />
           </label>
@@ -114,7 +128,9 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
               name="longitude"
               type="number"
               step="any"
-              defaultValue={defaultAddress?.longitude ?? ""}
+              value={values.longitude}
+              onChange={(event) => updateValue("longitude", event.target.value)}
+              aria-invalid={state.field === "longitude"}
               required
             />
           </label>
@@ -122,21 +138,19 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
         <button
           className="button button-light locate-button"
           type="button"
-          onClick={(event) => {
-            const form = event.currentTarget.form;
-            if (!navigator.geolocation || !form)
+          onClick={() => {
+            if (!navigator.geolocation)
               return setLocationMessage(
                 "Location is unavailable in this browser.",
               );
             setLocationMessage("Requesting your location…");
             navigator.geolocation.getCurrentPosition(
               ({ coords }) => {
-                (
-                  form.elements.namedItem("latitude") as HTMLInputElement
-                ).value = String(coords.latitude);
-                (
-                  form.elements.namedItem("longitude") as HTMLInputElement
-                ).value = String(coords.longitude);
+                setValues((current) => ({
+                  ...current,
+                  latitude: String(coords.latitude),
+                  longitude: String(coords.longitude),
+                }));
                 setLocationMessage(
                   "Location added. Confirm the street address above.",
                 );
@@ -162,6 +176,11 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
             name="instructions"
             maxLength={500}
             placeholder="Gate code, landmark or delivery note"
+            value={values.instructions}
+            onChange={(event) =>
+              updateValue("instructions", event.target.value)
+            }
+            aria-invalid={state.field === "instructions"}
           />
         </label>
         <label className="field-group">
@@ -172,11 +191,20 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
             min="0"
             max="500"
             step="1"
-            defaultValue="0"
+            value={values.tip}
+            onChange={(event) => updateValue("tip", event.target.value)}
+            aria-invalid={state.field === "tip"}
           />
         </label>
         <label className="consent-check">
-          <input type="checkbox" name="terms" required />
+          <input
+            type="checkbox"
+            name="terms"
+            checked={termsAccepted}
+            onChange={(event) => setTermsAccepted(event.target.checked)}
+            aria-invalid={state.field === "terms"}
+            required
+          />
           <span>
             I accept the terms, cancellation policy and final server-calculated
             total.

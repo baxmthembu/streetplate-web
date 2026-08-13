@@ -1,7 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function SiteFooter() {
+import { signOut } from "@/app/auth/actions";
+
+type AccountRole = "customer" | "vendor" | "driver" | "admin" | null;
+
+export function SiteFooter({
+  isSignedIn,
+  role = null,
+}: {
+  isSignedIn: boolean;
+  role?: AccountRole;
+}) {
+  const accountHref =
+    role === "vendor"
+      ? "/vendor/account"
+      : role === "driver"
+        ? "/driver/profile"
+        : "/account";
+  const ordersHref =
+    role === "vendor"
+      ? "/vendor/orders"
+      : role === "driver"
+        ? "/driver/history"
+        : "/account#order-history";
   return (
     <footer className="site-footer" id="footer-navigation">
       <div className="shell footer-grid">
@@ -20,19 +42,41 @@ export function SiteFooter() {
           <p className="footer-copy">
             Local food, delivered from your community.
           </p>
-          <p className="footer-small">Built in South Africa.</p>
         </div>
         <div>
           <h2>Discover</h2>
           <Link href="/discover">Find food</Link>
           <Link href="/discover?category=kota">Kota near me</Link>
-          <Link href="/discover?category=home-cooked">Home-cooked meals</Link>
+          <Link href="/discover?category=home-cooked">Home cooked meals</Link>
         </div>
         <div>
-          <h2>Join us</h2>
-          <Link href="/become-a-vendor">Become a vendor</Link>
-          <Link href="/become-a-driver">Become a driver</Link>
-          <Link href="/join">Create an account</Link>
+          <h2>{isSignedIn ? "Your account" : "Join us"}</h2>
+          {isSignedIn ? (
+            <>
+              <Link href={accountHref}>
+                {role === "vendor"
+                  ? "Vendor settings"
+                  : role === "driver"
+                    ? "Driver profile"
+                    : "Account"}
+              </Link>
+              <Link href={ordersHref}>
+                {role === "driver" ? "Delivery history" : "Orders"}
+              </Link>
+              <form className="footer-auth-form" action={signOut}>
+                <button className="footer-auth-button" type="submit">
+                  Sign out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link href="/sign-in">Sign in</Link>
+              <Link href="/join">Create an account</Link>
+              <Link href="/become-a-vendor">Become a vendor</Link>
+              <Link href="/become-a-driver">Become a driver</Link>
+            </>
+          )}
         </div>
         <div>
           <h2>Legal</h2>
@@ -46,7 +90,6 @@ export function SiteFooter() {
       </div>
       <div className="shell footer-bottom">
         <span>© {new Date().getFullYear()} StreetPlate</span>
-        <span>Legal copy requires review by a South African lawyer.</span>
       </div>
     </footer>
   );

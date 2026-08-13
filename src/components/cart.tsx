@@ -1,19 +1,27 @@
 "use client";
 
 import { Minus, Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from "react";
 
 import { useCart } from "@/components/cart-provider";
+import { CartSkeleton } from "@/components/page-skeletons";
 import { formatRand } from "@/lib/format";
+import { foodImageFor, type Meal } from "@/lib/site-data";
 
 const deliveryFee = 15;
 
-export function Cart() {
+export function Cart({ menuItems = [] }: { menuItems?: Meal[] }) {
   const { items, hydrated, subtotal, updateQuantity, updateNotes, removeItem } =
     useCart();
+  const menuItemsById = useMemo(
+    () => new Map(menuItems.map((item) => [item.id, item])),
+    [menuItems],
+  );
 
   if (!hydrated) {
-    return <div className="empty-state">Loading your saved cart…</div>;
+    return <CartSkeleton />;
   }
 
   if (items.length === 0) {
@@ -39,55 +47,74 @@ export function Cart() {
             <h2>{items[0].vendorName}</h2>
           </div>
         </div>
-        {items.map((item) => (
-          <article className="cart-line cart-line-live" key={item.id}>
-            <div className="meal-visual tone-coral" aria-hidden="true">
-              {item.name.slice(0, 1)}
-            </div>
-            <div>
-              <h3>{item.name}</h3>
-              <p>{item.description}</p>
-              <strong>{formatRand(item.price)}</strong>
-              <label className="item-notes">
-                <span>Special instructions</span>
-                <input
-                  value={item.notes}
-                  onChange={(event) => updateNotes(item.id, event.target.value)}
-                  maxLength={300}
-                  placeholder="e.g. no atchar"
+        {items.map((item) => {
+          const menuItem = menuItemsById.get(item.id);
+
+          return (
+            <article className="cart-line cart-line-live" key={item.id}>
+              <div
+                className={`meal-visual cart-item-image tone-${menuItem?.accent ?? item.accent ?? "coral"}`}
+              >
+                <Image
+                  src={foodImageFor(
+                    menuItem?.category ?? item.category ?? "",
+                    item.name,
+                    menuItem?.imageUrl ?? item.imageUrl,
+                  )}
+                  alt={`${item.name} from ${item.vendorName}`}
+                  fill
+                  sizes="(max-width: 680px) 72px, 95px"
                 />
-              </label>
-            </div>
-            <div
-              className="quantity-control"
-              aria-label={`${item.name} quantity`}
-            >
-              <button
-                type="button"
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                aria-label={`Decrease ${item.name} quantity`}
+              </div>
+              <div className="cart-item-details">
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+                <strong className="cart-item-price">
+                  {formatRand(item.price)}
+                </strong>
+                <label className="item-notes">
+                  <span>Special instructions</span>
+                  <input
+                    value={item.notes}
+                    onChange={(event) =>
+                      updateNotes(item.id, event.target.value)
+                    }
+                    maxLength={300}
+                    placeholder="e.g. no atchar"
+                  />
+                </label>
+              </div>
+              <div
+                className="quantity-control"
+                aria-label={`${item.name} quantity`}
               >
-                <Minus size={16} aria-hidden="true" />
-              </button>
-              <span aria-live="polite">{item.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  aria-label={`Decrease ${item.name} quantity`}
+                >
+                  <Minus size={16} aria-hidden="true" />
+                </button>
+                <span aria-live="polite">{item.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  aria-label={`Increase ${item.name} quantity`}
+                >
+                  <Plus size={16} aria-hidden="true" />
+                </button>
+              </div>
               <button
+                className="remove-line"
                 type="button"
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                aria-label={`Increase ${item.name} quantity`}
+                onClick={() => removeItem(item.id)}
+                aria-label={`Remove ${item.name}`}
               >
-                <Plus size={16} aria-hidden="true" />
+                <Trash2 size={18} aria-hidden="true" />
               </button>
-            </div>
-            <button
-              className="remove-line"
-              type="button"
-              onClick={() => removeItem(item.id)}
-              aria-label={`Remove ${item.name}`}
-            >
-              <Trash2 size={18} aria-hidden="true" />
-            </button>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </section>
       <aside className="cart-summary">
         <p className="eyebrow">Order summary</p>

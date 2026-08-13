@@ -14,21 +14,29 @@ export default async function PaymentPage({
   const { order } = await searchParams;
   if (typeof order !== "string" || !order) redirect("/account");
   let payload:
-    | { paymentUrl: string; paymentData: Record<string, string | number> }
+    | {
+        paymentUrl: string;
+        paymentData: Record<string, string | number>;
+        environment: "sandbox" | "live";
+      }
     | undefined;
   let loadError = "";
   try {
     payload = await streetPlateApi<{
       paymentUrl: string;
       paymentData: Record<string, string | number>;
+      environment: "sandbox" | "live";
     }>(`/payments/data?order_id=${encodeURIComponent(order)}`);
   } catch (error) {
     if (error instanceof StreetPlateApiError && error.status === 401)
       redirect("/sign-in");
-    loadError =
-      error instanceof Error
-        ? error.message
-        : "Try again from your order history.";
+    if (error instanceof StreetPlateApiError && error.status === 409) {
+      loadError = "This order is no longer awaiting payment.";
+    } else if (error instanceof StreetPlateApiError && error.status === 404) {
+      loadError = "We could not find this order.";
+    } else {
+      loadError = "Please try again shortly from your order history.";
+    }
   }
   if (!payload)
     return (
@@ -48,7 +56,15 @@ export default async function PaymentPage({
         Your order remains pending until PayFast sends a verified payment
         notification to StreetPlate.
       </p>
-      <PayFastForm {...payload} />
+      {payload.environment === "sandbox" ? (
+        <p role="status">
+          Sandbox checkout is active. No real money will be charged.
+        </p>
+      ) : null}
+      <PayFastForm
+        paymentUrl={payload.paymentUrl}
+        paymentData={payload.paymentData}
+      />
       <Link className="button button-dark" href={`/orders/${order}`}>
         Track order status
       </Link>

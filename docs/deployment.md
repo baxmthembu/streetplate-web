@@ -19,8 +19,10 @@ The existing Railway-hosted Express API and shared Supabase project remain separ
 7. Confirm backend CORS permits only approved website origins.
 8. Do not add `SUPABASE_SERVICE_ROLE_KEY`, PayFast credentials, Cloudinary credentials or the backend Maps key to this website.
 9. Configure `STREETPLATE_API_URL` and `NEXT_PUBLIC_SOCKET_URL` to the approved existing backend origin.
-10. Run `npm run validate:production-env` in each configured deployment environment.
-11. Configure the hosting health check to `/api/health` and gate traffic on `/api/readiness` returning HTTP 200.
+10. Configure the managed `streetplate-web` Cloudflare Turnstile widget values as `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, server-only `TURNSTILE_SECRET`, and `TURNSTILE_HOSTNAMES=streetplate.co.za`. The widget itself permits localhost for development, but the Production backend allowlist must never contain `localhost` or `127.0.0.1`.
+11. Run `npm run validate:production-env` in each configured deployment environment.
+12. Configure the hosting health check to `/api/health` and gate traffic on `/api/readiness` returning HTTP 200.
+13. Connect the Vercel-managed Upstash Redis resource to both Preview and Production. Confirm `KV_REST_API_URL` and server-only `KV_REST_API_TOKEN` exist in each environment, then redeploy so all instances share atomic rate-limit counters.
 
 ## Release checklist
 
@@ -28,7 +30,9 @@ The existing Railway-hosted Express API and shared Supabase project remain separ
 - Preview tested on narrow and desktop viewports
 - No demo content visible when production data is expected
 - Supabase Auth redirects and cookie domain verified
+- Turnstile succeeds across protected authentication and password forms, rejects missing, wrong-action, wrong-hostname and replayed tokens, and reports validation events in Cloudflare analytics
 - Existing mobile logins and order flows smoke-tested
+- Shared Redis limits tested in Preview, including a blocked request and `Retry-After` response metadata
 - PayFast remains sandbox until separately approved
 - No unapproved migrations pending or applied
 - Rollback is the previous Vercel deployment and, when applicable, a reviewed SQL rollback

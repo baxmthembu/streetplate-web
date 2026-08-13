@@ -12,18 +12,22 @@
 - opt-in live account journey using dedicated staging credentials
 - two-stage CI: static/unit/build validation followed by browser tests
 - standard Next.js Node output compatible with Vercel previews and `next start`
+- protected responsive driver portal for dispatch, delivery progression, earnings, wallet, payouts, history, profile and chat
+- explicit paused-backend and wrong-role states rather than fabricated operational data
+- atomic Upstash Redis rate limits shared across all Preview and Production website instances, with fail-closed deployed behavior
 
 ## Required before a production deployment
 
 1. Merge the reviewed pull request into `main`.
-2. Import the GitHub repository into Vercel and create separate Preview and Production environments.
+2. Import the GitHub repository into Vercel and create separate Preview and Production environments. Keep the managed Upstash rate-limit resource connected to both tiers.
 3. Configure every required variable from `.env.example`; run `npm run validate:production-env` in the deployment environment.
 4. Set Supabase Site URL and redirect allow-list entries for preview and production domains.
 5. Allow those origins in the existing Express/Socket.IO backend CORS configuration.
 6. Configure custom SMTP, email confirmation, leaked-password protection, CAPTCHA and appropriate Auth rate limits in Supabase.
 7. Run `npm run test:e2e:live` against staging using a dedicated customer account.
-8. Complete PayFast sandbox, vendor, driver and mobile regression journeys before enabling live payments.
-9. Obtain South African legal review and publish real privacy/support contacts.
+8. Run the driver portal against an approved staging driver account: online/offline, offer accept/reject, all delivery transitions, foreground location, chat, earnings credit, weekly payout data, vehicle and bank updates.
+9. Complete PayFast sandbox, vendor, driver and mobile regression journeys before enabling live payments.
+10. Obtain South African legal review and publish real privacy/support contacts.
 
 Production deployment is intentionally blocked when `/api/readiness` returns HTTP 503.
 

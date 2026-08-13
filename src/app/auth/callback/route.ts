@@ -1,21 +1,40 @@
-import { NextResponse } from "next/server";
-
+import { safeInternalPath } from "@/lib/auth-navigation";
+import { rateLimitRequest } from "@/lib/security/rate-limit";
+import { secureRedirect, withRateLimitHeaders } from "@/lib/security/responses";
+import { isSafeAuthCode, safeSiteOrigin } from "@/lib/security/validation";
 import { createClient } from "@/lib/supabase/server";
-
-function safeNext(value: string | null): string {
-  return value?.startsWith("/") && !value.startsWith("//") ? value : "/account";
-}
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const code = url.searchParams.get("code");
-  const destination = safeNext(url.searchParams.get("next"));
-  if (code) {
+  const origin = safeSiteOrigin(request);
+  const rateLimit = await rateLimitRequest(request, "auth-callback", {
+    limit: 20,
+    windowMs: 10 * 60_000,
+  });
+  if (!rateLimit.allowed) {
+    return withRateLimitHeaders(
+      secureRedirect(new URL("/sign-in?error=rate_limited", origin)),
+      rateLimit,
+    );
+  }
+
+  const codes = url.searchParams.getAll("code");
+  const code = codes.length === 1 ? codes[0] : null;
+  const destination = safeInternalPath(url.searchParams.get("next"));
+  if (isSafeAuthCode(code)) {
     const supabase = await createClient();
     const { error } = (await supabase?.auth.exchangeCodeForSession(code)) ?? {
       error: new Error("Auth unavailable"),
     };
-    if (!error) return NextResponse.redirect(new URL(destination, url.origin));
+    if (!error) {
+      return withRateLimitHeaders(
+        secureRedirect(new URL(destination, origin)),
+        rateLimit,
+      );
+    }
   }
-  return NextResponse.redirect(new URL("/sign-in?error=callback", url.origin));
+  return withRateLimitHeaders(
+    secureRedirect(new URL("/sign-in?error=callback", origin)),
+    rateLimit,
+  );
 }

@@ -3,7 +3,11 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-import { getSupabaseEnv, hasSupabaseEnv } from "./env";
+import {
+  getSupabaseCookieOptions,
+  getSupabaseEnv,
+  hasSupabaseEnv,
+} from "./env";
 
 export async function createClient() {
   if (!hasSupabaseEnv()) return null;
@@ -12,6 +16,7 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient(url, publishableKey, {
+    cookieOptions: getSupabaseCookieOptions(),
     cookies: {
       getAll() {
         return cookieStore.getAll();

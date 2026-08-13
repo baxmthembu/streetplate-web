@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
-
 import {
   normalizeApiBase,
   productionReadiness,
 } from "@/lib/production-readiness";
+import { rateLimitRequest } from "@/lib/security/rate-limit";
+import {
+  secureJson,
+  tooManyRequests,
+  withRateLimitHeaders,
+} from "@/lib/security/responses";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +24,13 @@ async function reachable(url: string, headers?: HeadersInit) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rateLimit = await rateLimitRequest(request, "readiness", {
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (!rateLimit.allowed) return tooManyRequests(rateLimit);
+
   const configuration = productionReadiness();
   const apiUrl = process.env.STREETPLATE_API_URL;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -38,14 +48,14 @@ export async function GET() {
   ]);
   const ready = configuration.ready && api && auth;
 
-  return NextResponse.json(
-    {
-      status: ready ? "ready" : "not_ready",
-      checks: { configuration: configuration.ready, api, auth },
-    },
-    {
-      status: ready ? 200 : 503,
-      headers: { "Cache-Control": "no-store" },
-    },
+  return withRateLimitHeaders(
+    secureJson(
+      {
+        status: ready ? "ready" : "not_ready",
+        checks: { configuration: configuration.ready, api, auth },
+      },
+      { status: ready ? 200 : 503 },
+    ),
+    rateLimit,
   );
 }

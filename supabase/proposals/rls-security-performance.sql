@@ -5,6 +5,77 @@
 
 begin;
 
+-- Remove write privileges that the Data API roles do not need. Existing RLS
+-- policies still decide which rows are visible/readable; service_role backend
+-- access and table/column names are unchanged.
+revoke insert, update, delete, truncate, references, trigger
+  on table public.availability_schedules,
+           public.combo_meal_items,
+           public.combo_meals,
+           public.delivery_offers,
+           public.driver_earnings,
+           public.driver_locations,
+           public.driver_profiles,
+           public.favorite_items,
+           public.favorite_vendors,
+           public.menu_categories,
+           public.menu_item_inventory,
+           public.menu_items,
+           public.messages,
+           public.notifications,
+           public.order_items,
+           public.order_tips,
+           public.orders,
+           public.payments,
+           public.promotions,
+           public.reviews,
+           public.saved_addresses,
+           public.spatial_ref_sys,
+           public.token_blacklist,
+           public.user_sessions,
+           public.users,
+           public.vendor_analytics_daily,
+           public.vendors
+  from anon;
+
+revoke insert, update, delete, truncate, references, trigger
+  on table public.availability_schedules,
+           public.combo_meal_items,
+           public.combo_meals,
+           public.delivery_offers,
+           public.driver_earnings,
+           public.driver_locations,
+           public.driver_profiles,
+           public.favorite_items,
+           public.favorite_vendors,
+           public.menu_categories,
+           public.menu_item_inventory,
+           public.menu_items,
+           public.messages,
+           public.notifications,
+           public.order_items,
+           public.order_tips,
+           public.orders,
+           public.payments,
+           public.promotions,
+           public.reviews,
+           public.saved_addresses,
+           public.spatial_ref_sys,
+           public.token_blacklist,
+           public.user_sessions,
+           public.users,
+           public.vendor_analytics_daily,
+           public.vendors
+  from authenticated;
+
+-- PostGIS maintains this lookup table. Keep SELECT available for spatial
+-- operations while preventing direct Data API mutation and satisfying the
+-- exposed-schema RLS requirement.
+alter table public.spatial_ref_sys enable row level security;
+drop policy if exists spatial_ref_sys_read on public.spatial_ref_sys;
+create policy spatial_ref_sys_read on public.spatial_ref_sys
+  for select to anon, authenticated using (true);
+
 alter policy users_own_access on public.users to authenticated
   using ((select auth.uid()) = id)
   with check ((select auth.uid()) = id);
@@ -67,9 +138,19 @@ alter policy messages_read_own_order on public.messages to authenticated
 
 revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
 
+-- PostGIS-owned SECURITY DEFINER helpers are not part of the StreetPlate API.
+-- Removing Data API execution does not affect SQL calls made by trusted
+-- backend/database roles.
+revoke execute on function public.st_estimatedextent(text, text)
+  from public, anon, authenticated;
+revoke execute on function public.st_estimatedextent(text, text, text)
+  from public, anon, authenticated;
+revoke execute on function public.st_estimatedextent(text, text, text, boolean)
+  from public, anon, authenticated;
+
 commit;
 
 -- Deliberately excluded pending platform/extension review:
--- * public.spatial_ref_sys and the public PostGIS extension
--- * PostGIS-owned st_estimatedextent overloads
+-- * moving the public PostGIS extension (requires a separate spatial upgrade
+--   rehearsal and is not necessary to close Data API access)
 -- * leaked-password protection (Dashboard/Auth configuration, not SQL)

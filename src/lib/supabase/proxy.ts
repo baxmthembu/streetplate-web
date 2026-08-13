@@ -1,7 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getSupabaseEnv, hasSupabaseEnv } from "./env";
+import {
+  getSupabaseCookieOptions,
+  getSupabaseEnv,
+  hasSupabaseEnv,
+} from "./env";
 
 export async function updateSession(request: NextRequest) {
   if (!hasSupabaseEnv()) return NextResponse.next({ request });
@@ -10,6 +14,7 @@ export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(url, publishableKey, {
+    cookieOptions: getSupabaseCookieOptions(),
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll(cookiesToSet, headersToSet) {
@@ -27,6 +32,9 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  // Initializes and, when necessary, refreshes the signed session before the
+  // request reaches a Server Component. Authorization still belongs in each
+  // Server Action/handler and must not rely on proxy execution alone.
   await supabase.auth.getClaims();
   return response;
 }

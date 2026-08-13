@@ -1,24 +1,47 @@
 "use server";
 
 import { z } from "zod";
+import { headers } from "next/headers";
 
-import { streetPlateApi } from "@/lib/backend";
+import { StreetPlateApiError, streetPlateApi } from "@/lib/backend";
 import { distanceKm } from "@/lib/commerce-rules";
 import { getVendorBySlug } from "@/lib/streetplate-api";
+import { rateLimitClientKey } from "@/lib/security/client-ip";
+import { consumeRateLimit } from "@/lib/security/rate-limit";
 
 export type CheckoutState = {
   message: string;
   orderId?: string;
+  field?: string;
 };
+
+const requiredNumber = (minimum: number, maximum: number) =>
+  z.preprocess(
+    (value) =>
+      typeof value === "string" && value.trim() === "" ? undefined : value,
+    z.coerce.number().min(minimum).max(maximum),
+  );
 
 const cartSchema = z
   .array(
     z.object({
-      id: z.string().min(1).max(255),
-      vendorId: z.string().min(1).max(255),
-      vendorSlug: z.string().min(1).max(300),
+      id: z.uuid(),
+      vendorId: z.uuid(),
+      vendorSlug: z
+        .string()
+        .min(3)
+        .max(300)
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
       quantity: z.number().int().min(1).max(100),
-      notes: z.string().max(300).optional(),
+      notes: z
+        .string()
+        .trim()
+        .max(300)
+        .refine(
+          (value) =>
+            !/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value),
+        )
+        .optional(),
     }),
   )
   .min(1)
@@ -28,6 +51,21 @@ export async function createOrder(
   _previousState: CheckoutState,
   formData: FormData,
 ): Promise<CheckoutState> {
+  const requestHeaders = await headers();
+  const clientKey = rateLimitClientKey(requestHeaders);
+  const rateLimit = await consumeRateLimit(
+    `server-action:checkout:${clientKey}`,
+    {
+      limit: 15,
+      windowMs: 600_000,
+    },
+  );
+  if (!rateLimit.allowed) {
+    return {
+      message: "Too many checkout attempts. Wait 10 minutes and try again.",
+    };
+  }
+
   let cartValue: unknown;
   try {
     cartValue = JSON.parse(String(formData.get("items") ?? "[]"));
@@ -38,11 +76,23 @@ export async function createOrder(
   const parsed = z
     .object({
       items: cartSchema,
-      address: z.string().trim().min(5).max(500),
-      latitude: z.coerce.number().min(-90).max(90),
-      longitude: z.coerce.number().min(-180).max(180),
-      instructions: z.string().trim().max(500),
-      tip: z.coerce.number().min(0).max(500),
+      address: z
+        .string()
+        .trim()
+        .min(5)
+        .max(500)
+        .refine((value) => !/[\u0000-\u001f\u007f]/.test(value)),
+      latitude: requiredNumber(-90, 90),
+      longitude: requiredNumber(-180, 180),
+      instructions: z
+        .string()
+        .trim()
+        .max(500)
+        .refine(
+          (value) =>
+            !/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value),
+        ),
+      tip: z.coerce.number().finite().min(0).max(500),
       terms: z.literal("on"),
     })
     .safeParse({
@@ -56,8 +106,19 @@ export async function createOrder(
     });
 
   if (!parsed.success) {
+    const field = String(parsed.error.issues[0]?.path[0] ?? "");
+    const messages: Record<string, string> = {
+      items: "Your cart is empty or contains an invalid item.",
+      address: "Enter a complete delivery address of at least 5 characters.",
+      latitude: "Enter a valid delivery latitude between -90 and 90.",
+      longitude: "Enter a valid delivery longitude between -180 and 180.",
+      instructions: "Keep delivery instructions under 500 characters.",
+      tip: "Enter a driver tip between R0 and R500.",
+      terms: "Accept the terms and cancellation policy before ordering.",
+    };
     return {
-      message: parsed.error.issues[0]?.message ?? "Check the delivery details.",
+      message: messages[field] ?? "Check the delivery details.",
+      field,
     };
   }
 
@@ -65,6 +126,9 @@ export async function createOrder(
   const vendorSlug = parsed.data.items[0].vendorSlug;
   if (parsed.data.items.some((item) => item.vendorId !== vendorId)) {
     return { message: "An order can contain items from one vendor only." };
+  }
+  if (parsed.data.items.some((item) => item.vendorSlug !== vendorSlug)) {
+    return { message: "The cart contains inconsistent vendor information." };
   }
 
   const detail = await getVendorBySlug(vendorSlug);
@@ -75,7 +139,12 @@ export async function createOrder(
     return { message: "This vendor is currently closed." };
 
   const menuById = new Map(detail.meals.map((meal) => [meal.id, meal]));
-  if (parsed.data.items.some((item) => !menuById.has(item.id))) {
+  if (
+    parsed.data.items.some((item) => {
+      const meal = menuById.get(item.id);
+      return !meal || meal.isAvailable === false;
+    })
+  ) {
     return { message: "One or more cart items are no longer available." };
   }
 
@@ -123,13 +192,49 @@ export async function createOrder(
         tip_amount: parsed.data.tip,
       }),
     });
-    return { message: "Order created securely.", orderId: payload.order.id };
+    const response = z
+      .object({ order: z.object({ id: z.uuid() }) })
+      .safeParse(payload);
+    if (!response.success) {
+      return {
+        message:
+          "The order was received, but confirmation is delayed. Check your orders before retrying.",
+      };
+    }
+    return {
+      message: "Order created securely.",
+      orderId: response.data.order.id,
+    };
   } catch (error) {
+    if (error instanceof StreetPlateApiError) {
+      if (error.status === 401)
+        return { message: "Sign in before placing your order." };
+      if (error.status === 403)
+        return { message: "This account cannot place customer orders." };
+      if (error.status === 404)
+        return {
+          message:
+            "A vendor or menu item in your cart is no longer available. Refresh your cart.",
+        };
+      if (error.status === 409)
+        return {
+          message:
+            "Your order changed while it was being submitted. Review the cart and retry.",
+        };
+      if (error.status === 400)
+        return {
+          message:
+            "The order details were rejected. Check the address, cart items and quantities.",
+        };
+      if (error.status >= 500)
+        return {
+          message:
+            "Ordering is temporarily unavailable. Your cart is safe; please retry shortly.",
+        };
+    }
     return {
       message:
-        error instanceof Error
-          ? error.message
-          : "The order could not be created.",
+        "The order could not be created. Your cart has not been cleared.",
     };
   }
 }

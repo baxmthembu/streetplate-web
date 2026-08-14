@@ -102,7 +102,10 @@ async function apiFetch(url: string, init: RequestInit) {
 export async function getVerifiedAccessToken(): Promise<string> {
   const supabase = await createClient();
   if (!supabase) {
-    throw new StreetPlateApiError("Authentication is not configured.", 503);
+    // Protected routes must fail at the authentication boundary even when a
+    // non-production environment has no Supabase credentials. Operational
+    // readiness remains fail-closed in /api/readiness.
+    throw new StreetPlateApiError("Sign in to continue.", 401);
   }
 
   const { data: claimData, error: claimError } = await withTimeout(

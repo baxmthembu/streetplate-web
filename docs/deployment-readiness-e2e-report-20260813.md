@@ -28,6 +28,11 @@ claims that are not yet backed by complete website functionality.
 - Vercel Preview deployment
   `dpl_41gyAndCvFouv2RpqsHtM8CsCE2k` is `READY` and was built from the audited
   commit.
+- The final report-head Preview `dpl_2xPVyquZ6SGapccTrBdBoZSttPbD` returned
+  HTTP 200 from `/api/health` with `status: ok` and HTTP 200 from
+  `/api/readiness` with configuration, API and Auth checks all true. The probe
+  used an authenticated temporary Vercel share session because Deployment
+  Protection is enabled.
 - Vercel reported no runtime error clusters and no error/fatal logs for that
   Preview during the authenticated audit.
 - ESLint: passed with no errors or warnings.
@@ -138,20 +143,16 @@ the normal form; no CAPTCHA token was injected or bypassed.
    approved business/privacy contacts and South African legal review.
 2. Staging lacks a dedicated approved vendor E2E account, so the complete live
    vendor dashboard and mutation journey is not yet verified end to end.
-3. The final public/canonical deployment must return HTTP 200 from
-   `/api/health` and `/api/readiness`. The protected Preview exercised Auth,
-   backend and Redis successfully, but Vercel Deployment Protection prevented a
-   stateless external probe of those two endpoints on the final deployment.
-4. Delivery location is collected and geocoded, but discovery does not yet apply
+3. Delivery location is collected and geocoded, but discovery does not yet apply
    distance/radius filtering or location-based delivery fee calculation.
-5. Vendor/driver recruitment copy promises application document upload and
+4. Vendor/driver recruitment copy promises application document upload and
    tracking that the current website does not implement.
-6. Driver `Call customer` is signalling/UI only; there is no WebRTC media
+5. Driver `Call customer` is signalling/UI only; there is no WebRTC media
    transport and microphone permission remains intentionally disabled.
-7. Driver online location streaming and live-offer recovery need a separately
+6. Driver online location streaming and live-offer recovery need a separately
    approved location-permission test with a suitable staging delivery fixture.
-8. Production email/Resend completion remains a separate paused task.
-9. The synthetic staging customer and driver passwords should be rotated before
+7. Production email/Resend completion remains a separate paused task.
+8. The synthetic staging customer and driver passwords should be rotated before
    those accounts are reused because a form-state diagnostic surfaced them in
    the audit transcript. No production credential was exposed.
 

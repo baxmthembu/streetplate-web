@@ -3568,6 +3568,24 @@ summary {
   font-size: 0.78rem;
   font-weight: 800;
 }
+.vendor-data-notice {
+  align-items: flex-start;
+  background: var(--cream);
+  border: 1px solid #f1c7a8;
+  border-radius: 16px;
+  color: var(--charcoal);
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+}
+.vendor-data-notice svg {
+  color: var(--orange-dark);
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+.vendor-data-notice p {
+  margin: 0;
+}
 .vendor-review-grid {
   display: grid;
   gap: 1rem;

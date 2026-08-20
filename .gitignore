@@ -36,6 +36,7 @@ yarn-error.log*
 # local Codex workspace metadata
 /.agents/
 /.codex/
+/.cursor/
 /skills-lock.json
 
 # env files (the placeholder template is committed)

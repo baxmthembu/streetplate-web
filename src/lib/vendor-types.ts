@@ -67,7 +67,17 @@ export type VendorAnalytics = {
 export type VendorTopItem = { name: string; quantity: number; revenue: number };
 export type VendorEarnings = {
   total: number;
-  transactions: Array<Record<string, unknown>>;
+  transactions: VendorEarningTransaction[];
+};
+export type VendorEarningTransaction = {
+  id: string;
+  vendor_payout: number | string;
+  paid_at?: string | null;
+  created_at: string;
+  orders?: {
+    order_number?: string | null;
+    created_at?: string | null;
+  } | null;
 };
 export type VendorWallet = {
   vendor_id: string;
@@ -78,10 +88,10 @@ export type VendorWallet = {
 };
 export type VendorPayout = {
   id: string;
-  amount: number | string;
+  total_amount: number | string;
   status: string;
   created_at: string;
-  processed_at?: string | null;
+  paid_at?: string | null;
 };
 export type VendorReview = {
   id: string;

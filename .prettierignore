@@ -1,5 +1,6 @@
 .agents/
 .codex/
+.cursor/
 .next/
 .next-dev.*.log
 coverage/

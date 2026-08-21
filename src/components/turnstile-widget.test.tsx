@@ -76,4 +76,45 @@ describe("TurnstileWidget", () => {
       "Security verification is not configured",
     );
   });
+
+  it("ignores a late callback from a replaced challenge", () => {
+    const callbacks: Array<(token: string) => void> = [];
+    window.turnstile = {
+      render: vi.fn((_container, options) => {
+        callbacks.push(options.callback);
+        return `widget-${callbacks.length}`;
+      }),
+      remove: vi.fn(),
+      reset: vi.fn(),
+    };
+    const onVerifiedChange = vi.fn();
+
+    const { container, rerender } = render(
+      <TurnstileWidget
+        action="login"
+        onVerifiedChange={onVerifiedChange}
+        resetSignal={{}}
+      />,
+    );
+
+    rerender(
+      <TurnstileWidget
+        action="password_update"
+        onVerifiedChange={onVerifiedChange}
+        resetSignal={{}}
+      />,
+    );
+
+    act(() => {
+      callbacks[1]?.("fresh-token");
+      callbacks[0]?.("stale-token");
+    });
+
+    expect(
+      container.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]',
+      ),
+    ).toHaveValue("fresh-token");
+    expect(onVerifiedChange).toHaveBeenLastCalledWith(true);
+  });
 });

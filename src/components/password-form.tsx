@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
 
 import {
   requestPasswordReset,
@@ -53,9 +54,17 @@ export function ForgotPasswordForm() {
 
 export function ResetPasswordForm() {
   const [state, action, pending] = useActionState(updatePassword, initialState);
+  const router = useRouter();
   const [verified, setVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    if (state.success) {
+      router.replace("/sign-in?message=password_updated");
+    }
+  }, [router, state.success]);
+
   return (
     <form action={action} className="auth-form">
       <label htmlFor="new-password">New password</label>

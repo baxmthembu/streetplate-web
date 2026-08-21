@@ -108,13 +108,12 @@ test("password recovery forms remain verification gated", async ({ page }) => {
   ).toBeDisabled();
 
   await page.goto("/reset-password", { waitUntil: "domcontentloaded" });
-  await expect(page.getByLabel("New password")).toHaveAttribute("required", "");
-  await expect(page.getByLabel("Confirm password")).toHaveAttribute(
+  await expect(page.getByLabel("Email address")).toHaveAttribute(
     "required",
     "",
   );
   await expect(
-    page.getByRole("button", { name: "Update password" }),
+    page.getByRole("button", { name: "Send reset link" }),
   ).toBeDisabled();
 });
 

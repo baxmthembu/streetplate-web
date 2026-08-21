@@ -20,6 +20,9 @@ type TurnstileRenderOptions = {
   "expired-callback": () => void;
   "unsupported-callback": () => void;
   "response-field": false;
+  "refresh-expired": "auto";
+  "refresh-timeout": "auto";
+  retry: "auto";
   size: "flexible";
   theme: "light";
 };
@@ -57,6 +60,7 @@ export function TurnstileWidget({
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<TurnstileWidgetId | null>(null);
+  const renderGenerationRef = useRef(0);
   const initialResetSignalRef = useRef(resetSignal);
   const [token, setToken] = useState("");
   const [loadError, setLoadError] = useState(false);
@@ -80,22 +84,32 @@ export function TurnstileWidget({
       return;
     }
 
+    const renderGeneration = ++renderGenerationRef.current;
+    const updateCurrentToken = (nextToken: string) => {
+      if (renderGeneration === renderGenerationRef.current) {
+        updateToken(nextToken);
+      }
+    };
+
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: siteKey,
       action,
       ...(cData ? { cData } : {}),
       appearance: "always",
-      callback: updateToken,
+      callback: updateCurrentToken,
       "error-callback": () => {
         setLoadError(true);
-        updateToken("");
+        updateCurrentToken("");
       },
-      "expired-callback": () => updateToken(""),
+      "expired-callback": () => updateCurrentToken(""),
       "unsupported-callback": () => {
         setLoadError(true);
-        updateToken("");
+        updateCurrentToken("");
       },
       "response-field": false,
+      "refresh-expired": "auto",
+      "refresh-timeout": "auto",
+      retry: "auto",
       size: "flexible",
       theme: "light",
     });
@@ -105,6 +119,7 @@ export function TurnstileWidget({
     renderWidget();
 
     return () => {
+      renderGenerationRef.current += 1;
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;

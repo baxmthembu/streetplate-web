@@ -4,7 +4,10 @@ import Link from "next/link";
 
 import { SignInForm } from "@/components/sign-in-form";
 import { getSafeInternalPath } from "@/lib/auth-navigation";
-import { getAuthCallbackMessage } from "@/lib/auth-messages";
+import {
+  getAuthCallbackMessage,
+  getAuthNoticeMessage,
+} from "@/lib/auth-messages";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -37,12 +40,18 @@ export default async function SignInPage({
   const params = await searchParams;
   const rawNext = params.next;
   const rawError = params.error;
+  const rawMessage = params.message;
   const nextPath = getSafeInternalPath(
     typeof rawNext === "string" ? rawNext : undefined,
   );
   const callbackMessage = getAuthCallbackMessage(
     typeof rawError === "string" ? rawError : undefined,
   );
+  const noticeMessage = getAuthNoticeMessage(
+    typeof rawMessage === "string" ? rawMessage : undefined,
+  );
+  const pageMessage = callbackMessage ?? noticeMessage;
+  const pageMessageIsSuccess = !callbackMessage && Boolean(noticeMessage);
 
   return (
     <section className="auth-page">
@@ -52,9 +61,12 @@ export default async function SignInPage({
         <p>
           Use the same email and password as your StreetPlate mobile account.
         </p>
-        {callbackMessage && (
-          <p className="form-message" role="alert">
-            {callbackMessage}
+        {pageMessage && (
+          <p
+            className={`form-message ${pageMessageIsSuccess ? "form-success" : ""}`}
+            role={pageMessageIsSuccess ? "status" : "alert"}
+          >
+            {pageMessage}
           </p>
         )}
         <SignInForm nextPath={nextPath ?? undefined} />

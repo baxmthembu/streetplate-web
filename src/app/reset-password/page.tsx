@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 
-import { ResetPasswordForm } from "@/components/password-form";
+import {
+  ForgotPasswordForm,
+  ResetPasswordForm,
+} from "@/components/password-form";
+import { RecoverySessionGate } from "@/components/recovery-session-gate";
 
 export const metadata: Metadata = { title: "Choose a new password" };
 export const dynamic = "force-dynamic";
@@ -15,7 +19,9 @@ export default function ResetPasswordPage() {
           Use a unique password with uppercase, lowercase, a number and a
           symbol.
         </p>
-        <ResetPasswordForm />
+        <RecoverySessionGate fallback={<ForgotPasswordForm />}>
+          <ResetPasswordForm />
+        </RecoverySessionGate>
       </div>
       <aside className="auth-note">
         <strong>One shared identity</strong>

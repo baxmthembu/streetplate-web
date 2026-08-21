@@ -144,6 +144,8 @@ describe("verifyTurnstile", () => {
     });
     await expect(verifyTurnstile(formData, "login")).resolves.toMatchObject({
       success: false,
+      message:
+        "The security check expired. Complete the new check and try again.",
     });
   });
 });

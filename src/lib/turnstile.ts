@@ -81,11 +81,26 @@ export async function verifyTurnstile(
     }
 
     const parsed = siteverifyResponseSchema.safeParse(await response.json());
-    if (
-      !parsed.success ||
-      !parsed.data.success ||
-      parsed.data.action !== expectedAction
-    ) {
+    if (!parsed.success) {
+      return {
+        success: false,
+        message: "Security verification failed. Please try again.",
+      };
+    }
+
+    if (!parsed.data.success) {
+      const expiredOrDuplicate = parsed.data["error-codes"]?.includes(
+        "timeout-or-duplicate",
+      );
+      return {
+        success: false,
+        message: expiredOrDuplicate
+          ? "The security check expired. Complete the new check and try again."
+          : "Security verification failed. Please try again.",
+      };
+    }
+
+    if (parsed.data.action !== expectedAction) {
       return {
         success: false,
         message: "Security verification failed. Please try again.",

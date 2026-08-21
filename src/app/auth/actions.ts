@@ -509,13 +509,10 @@ export async function requestPasswordReset(
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
   ).replace(/\/$/, "");
   try {
-    await streetPlatePublicApi("/auth/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({
-        email: parsed.data,
-        redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
-        turnstile_token: turnstileToken.data,
-      }),
+    const supabase = await createClient();
+    await supabase?.auth.resetPasswordForEmail(parsed.data, {
+      redirectTo: `${siteUrl}/reset-password`,
+      captchaToken: turnstileToken.data,
     });
   } catch {
     // Keep the response enumeration-safe even if the backend is unavailable.

@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 /**
- * StreetPlate staging verification harness (Phases A–G).
+ * StreetPlate staging verification harness (Phases A–H).
  *
  * Runs the live staging checks that cannot be performed from a sandboxed CI
  * session: dependency readiness, authenticated role sign-in, Turnstile contract
  * enforcement, vendor wallet/payout routing, distributed rate limiting, upload
- * malware scanning and Resend configuration.
+ * malware scanning, Resend configuration and the auth request contract that
+ * mobile clients must satisfy.
  *
  * Staging only. It never writes to production, never moves money, and never
  * prints a secret — credentials are reported as presence/shape only.
  *
+ * Phases C and H spend roughly six requests of the auth rate-limit quota
+ * (15 per 15 minutes per IP), so a default run stays well inside it.
+ *
  * Usage
- *   node scripts/verify-staging.mjs                     # phases A,B,C,D,F,G
+ *   node scripts/verify-staging.mjs                     # phases A,B,C,D,F,G,H
  *   node scripts/verify-staging.mjs --phases=A,D
  *   node scripts/verify-staging.mjs --phases=E --yes-rate-limit
  *   node scripts/verify-staging.mjs --json              # machine-readable summary
@@ -71,7 +75,7 @@ const option = (name, fallback) => {
 const JSON_OUT = flag("json");
 const ALLOW_RATE_LIMIT = flag("yes-rate-limit");
 const PHASES = new Set(
-  option("phases", "A,B,C,D,F,G")
+  option("phases", "A,B,C,D,F,G,H")
     .split(",")
     .map((p) => p.trim().toUpperCase())
     .filter(Boolean),
@@ -638,6 +642,98 @@ async function phaseG() {
   );
 }
 
+// ─── Phase H — auth contract (mobile client compatibility) ─────────────────
+// `turnstile_token` became a REQUIRED field on these endpoints. Every one is
+// wrapped in checkExact, so a client that omits it is rejected at validation
+// before any auth logic runs. Any client built against the older contract —
+// notably the React Native apps, whose source lives outside this repository —
+// breaks the moment that reaches its environment.
+//
+// Each body below is otherwise valid and omits only the token, so a 400 here
+// isolates the token as the cause. None reaches a write path: validation fails
+// first, so nothing is created. Read with Phase C, which proves the other half
+// (a present-but-invalid token is rejected at 403, not 400).
+const AUTH_CONTRACT = [
+  {
+    path: "/api/auth/login",
+    body: { email: "contract-probe@example.invalid", password: "Passw0rd!x" },
+  },
+  {
+    path: "/api/auth/register",
+    body: {
+      email: "contract-probe@example.invalid",
+      password: "Passw0rd!x",
+      name: "Contract Probe",
+      role: "customer",
+    },
+  },
+  {
+    path: "/api/auth/update-password",
+    body: { password: "Passw0rd!x" },
+  },
+  {
+    path: "/api/auth/profile/complete",
+    body: {
+      password: "Passw0rd!x",
+      name: "Contract Probe",
+      phone: "0821234567",
+      role: "customer",
+    },
+    // This route reports validation failures as { error, code } rather than
+    // an errors[] array, so the offending field cannot be named from the body.
+    fieldNotNamed: true,
+  },
+];
+
+async function phaseH() {
+  heading("Phase H — auth contract (mobile client compatibility)");
+
+  for (const { path, body, fieldNotNamed } of AUTH_CONTRACT) {
+    const res = await request(path, { method: "POST", body });
+
+    if (res.status !== 400) {
+      fail(
+        "H",
+        `${path} requires turnstile_token`,
+        `expected 400 without the token, got ${res.status} — contract is not enforced here`,
+      );
+      continue;
+    }
+
+    if (fieldNotNamed) {
+      check(
+        res.json?.code === "INVALID_PROFILE",
+        "H",
+        `${path} rejects a missing turnstile_token → 400 INVALID_PROFILE`,
+        `400 returned but code was ${JSON.stringify(res.json?.code)}`,
+      );
+      continue;
+    }
+
+    const named = Array.isArray(res.json?.errors)
+      ? res.json.errors.some((e) => e?.path === "turnstile_token")
+      : false;
+    check(
+      named,
+      "H",
+      `${path} rejects a missing turnstile_token → 400`,
+      `400 returned, but no errors[] entry names turnstile_token: ${res.text.slice(0, 160)}`,
+    );
+  }
+
+  if (!JSON_OUT) {
+    console.log(
+      `  ${C.dim}mobile clients must send turnstile_token on all four routes. The web bridge${C.reset}`,
+    );
+    console.log(
+      `  ${C.dim}is /mobile/turnstile?action=<login|signup|password_reset|password_update>&app=<app>,${C.reset}`,
+    );
+    console.log(
+      `  ${C.dim}which posts { type: "turnstile", ... } via ReactNativeWebView.postMessage.${C.reset}`,
+    );
+  }
+}
+
 // ─── Runner ────────────────────────────────────────────────────────────────
 async function main() {
   if (!JSON_OUT) {
@@ -675,6 +771,7 @@ async function main() {
     ["E", phaseE],
     ["F", phaseF],
     ["G", phaseG],
+    ["H", phaseH],
   ];
 
   // Phases D and F need the vendor session from B; run B implicitly if needed.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Noto_Sans, Noto_Serif } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
@@ -56,6 +57,12 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  // The mobile WebView bridge is rendered in a small, unscrollable native
+  // container — the site header/footer/cookie banner would push the actual
+  // Turnstile widget off-screen, so this route gets no site chrome.
+  const isBareBridgePage = pathname.startsWith("/mobile/turnstile");
+
   const supabase = await createClient();
   const { data: claimData, error: claimError } =
     (await supabase?.auth.getClaims()) ?? { data: null, error: null };
@@ -78,13 +85,19 @@ export default async function RootLayout({
     >
       <body>
         <CartProvider>
-          <a className="skip-link" href="#main-content">
-            Skip to content
-          </a>
-          <SiteHeader isSignedIn={isSignedIn} role={role} />
-          <main id="main-content">{children}</main>
-          <SiteFooter isSignedIn={isSignedIn} role={role} />
-          <CookieConsent />
+          {isBareBridgePage ? (
+            <main id="main-content">{children}</main>
+          ) : (
+            <>
+              <a className="skip-link" href="#main-content">
+                Skip to content
+              </a>
+              <SiteHeader isSignedIn={isSignedIn} role={role} />
+              <main id="main-content">{children}</main>
+              <SiteFooter isSignedIn={isSignedIn} role={role} />
+              <CookieConsent />
+            </>
+          )}
         </CartProvider>
       </body>
     </html>

@@ -22,6 +22,11 @@ export async function proxy(request: NextRequest) {
     return Response.redirect(secureUrl, 308);
   }
 
+  // Lets the root layout render the /mobile/turnstile bridge without the
+  // site chrome (header/footer/cookie banner), which would otherwise push
+  // the actual Turnstile widget off-screen inside the mobile apps' WebView.
+  request.headers.set("x-pathname", request.nextUrl.pathname);
+
   return updateSession(request);
 }
 

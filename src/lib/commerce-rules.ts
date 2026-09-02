@@ -13,3 +13,38 @@ export function distanceKm(
     Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(dLng / 2) ** 2;
   return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+
+type DeliveryLocation = {
+  latitude?: number | null;
+  longitude?: number | null;
+  deliveryRadius?: number | null;
+};
+
+/**
+ * A vendor missing location or radius data can't be evaluated, so it stays
+ * visible rather than being hidden by a data gap that isn't the customer's
+ * concern. Checkout (src/app/checkout/actions.ts) is the actual enforcement
+ * point for order placement; this only affects what discovery shows.
+ */
+export function isWithinDeliveryRadius(
+  vendor: DeliveryLocation,
+  customerLatitude: number,
+  customerLongitude: number,
+) {
+  if (
+    vendor.latitude == null ||
+    vendor.longitude == null ||
+    vendor.deliveryRadius == null
+  ) {
+    return true;
+  }
+
+  return (
+    distanceKm(
+      customerLatitude,
+      customerLongitude,
+      vendor.latitude,
+      vendor.longitude,
+    ) <= vendor.deliveryRadius
+  );
+}

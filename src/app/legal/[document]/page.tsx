@@ -72,7 +72,7 @@ const documents = {
     sections: [
       [
         "About StreetPlate",
-        "StreetPlate is operated by KulaConnect, registration number K2025921054, with its registered address at G1031 Bhejane Road, KwaMashu and can be contacted at support@gmail.com. StreetPlate is a marketplace that connects customers with independent food vendors and independent delivery partners; StreetPlate does not itself prepare food or make deliveries.",
+        "StreetPlate is operated by KulaConnect, registration number K2025921054, with its registered address at G1031 Bhejane Road, KwaMashu and can be contacted at support@streetplate.co.za. StreetPlate is a marketplace that connects customers with independent food vendors and independent delivery partners; StreetPlate does not itself prepare food or make deliveries.",
       ],
       [
         "Acceptance of these terms",
@@ -120,7 +120,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with our support team at support@gmail.com; unresolved consumer disputes may be referred to the National Consumer Commission or the courts of South Africa.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with our support team at support@streetplate.co.za; unresolved consumer disputes may be referred to the National Consumer Commission or the courts of South Africa.",
       ],
       [
         "Changes to these terms",
@@ -178,7 +178,7 @@ const documents = {
       ],
       [
         "Food that is unsafe, incorrect or not as described",
-        "If your order arrives unsafe, materially different from what was ordered, or otherwise not of the quality you're entitled to expect, you may request a refund or replacement in line with sections 55 and 56 of the Consumer Protection Act. Report the issue through the app or to support@gmail.com as soon as possible, ideally within 24 hours of delivery.",
+        "If your order arrives unsafe, materially different from what was ordered, or otherwise not of the quality you're entitled to expect, you may request a refund or replacement in line with sections 55 and 56 of the Consumer Protection Act. Report the issue through the app or to support@streetplate.co.za as soon as possible, ideally within 24 hours of delivery.",
       ],
       [
         "Delivery issues",
@@ -190,7 +190,7 @@ const documents = {
       ],
       [
         "Raising a dispute",
-        "If you're not satisfied with the outcome of a refund request, contact support@gmail.com to escalate it. If we cannot resolve your complaint directly, you may refer it to the Consumer Goods and Services Ombud or the National Consumer Commission.",
+        "If you're not satisfied with the outcome of a refund request, contact support@streetplate.co.za to escalate it. If we cannot resolve your complaint directly, you may refer it to the Consumer Goods and Services Ombud or the National Consumer Commission.",
       ],
     ],
   },
@@ -237,7 +237,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@gmail.com before any other proceedings are pursued.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@streetplate.co.za before any other proceedings are pursued.",
       ],
       [
         "Changes to these terms",
@@ -288,7 +288,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@gmail.com before any other proceedings are pursued.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@streetplate.co.za before any other proceedings are pursued.",
       ],
       [
         "Changes to these terms",

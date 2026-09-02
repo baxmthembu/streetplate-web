@@ -1,9 +1,18 @@
 # Driver liability and insurance — options for legal review
 
-Prepared to support the open placeholder in `src/app/legal/[document]/page.tsx`
-("driver-terms" → "Insurance and liability"). Not a decision — a briefing
-document for whoever reviews the legal drafts (gate 2 of PR #1) and, ideally,
-an insurance broker familiar with gig-economy delivery risk in South Africa.
+**Decision: Option A selected** (driver-sourced insurance requirement,
+StreetPlate takes no direct liability). Implemented in the "Eligibility and
+documentation" and "Insurance and liability" sections of the driver terms in
+`src/app/legal/[document]/page.tsx`. This was a business decision, not a
+legal one — the resulting clause still needs to be reviewed and confirmed by
+a qualified South African lawyer as part of gate 2, since a "no liability"
+clause only protects StreetPlate if it's actually drafted to hold up. The
+other two options are kept below for reference in case the reviewing lawyer
+recommends a different approach.
+
+Originally prepared to support the open placeholder. Briefing document for
+whoever reviews the legal drafts (gate 2 of PR #1) and, ideally, an
+insurance broker familiar with gig-economy delivery risk in South Africa.
 
 ## The question
 

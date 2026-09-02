@@ -256,7 +256,7 @@ const documents = {
       ],
       [
         "Eligibility and documentation",
-        "You must hold a valid driver's licence appropriate to your vehicle, provide accurate vehicle registration and roadworthiness information, and comply with the National Road Traffic Act 93 of 1996 at all times.",
+        "You must hold a valid driver's licence appropriate to your vehicle, provide accurate vehicle registration and roadworthiness information, confirm you hold vehicle insurance that covers commercial or delivery use before you can accept deliveries, and comply with the National Road Traffic Act 93 of 1996 at all times.",
       ],
       [
         "Safety and conduct",
@@ -276,7 +276,7 @@ const documents = {
       ],
       [
         "Insurance and liability",
-        "You are responsible for maintaining appropriate insurance for your own vehicle. [StreetPlate's position on liability for accidents or incidents during a delivery requires confirmation by qualified legal counsel before publication.]",
+        "You are responsible for maintaining insurance for your own vehicle that covers commercial or delivery ('hire or reward') use, and must be able to provide proof of this cover on request. StreetPlate does not provide or arrange insurance on your behalf. As an independent contractor, you are responsible for any liability arising from an accident or incident during a delivery, including injury, loss or damage to third parties, yourself, or the order.",
       ],
       [
         "Suspension and termination",

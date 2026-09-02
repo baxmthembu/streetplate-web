@@ -22,9 +22,8 @@ export default function VendorRecruitmentPage() {
       ]}
       steps={[
         "Share your business and contact information.",
-        "Provide location, menu and food-safety information.",
-        "Submit required documents through private storage.",
-        "Track review status before your business goes live.",
+        "Add your menu from your vendor dashboard.",
+        "Go live and start receiving orders.",
       ]}
     />
   );

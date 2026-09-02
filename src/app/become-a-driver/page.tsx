@@ -21,10 +21,9 @@ export default function DriverRecruitmentPage() {
         "Track completed deliveries",
       ]}
       steps={[
-        "Share personal and contact information.",
-        "Add vehicle and licence details where applicable.",
-        "Upload identity and proof-of-address documents securely.",
-        "Track application review before receiving delivery offers.",
+        "Share your personal and contact information.",
+        "Add your vehicle details from your driver profile.",
+        "Start receiving delivery offers.",
       ]}
     />
   );

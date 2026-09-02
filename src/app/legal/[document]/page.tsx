@@ -9,7 +9,7 @@ const documents = {
     sections: [
       [
         "Who is responsible for your information",
-        "StreetPlate ([Company legal name], registration number [CIPC registration number], registered address [registered physical address]) is the responsible party for personal information processed through this website and the customer, vendor and driver apps.",
+        "StreetPlate (KulaConnect, registration number K2025921054, registered address G1031 Bhejane Road, KwaMashu) is the responsible party for personal information processed through this website and the customer, vendor and driver apps.",
       ],
       [
         "Information we collect",
@@ -61,7 +61,7 @@ const documents = {
       ],
       [
         "Contact us and the Information Regulator",
-        "For any question about this policy or to exercise your rights, contact our Information Officer at [Information Officer name and email]. If you believe your information has been mishandled, you may also lodge a complaint with the Information Regulator (South Africa) at enquiries@inforegulator.org.za.",
+        "For any question about this policy or to exercise your rights, contact our Information Officer, Bongumusa Mthembu, at bongumusamthembu@streetplate.co.za. If you believe your information has been mishandled, you may also lodge a complaint with the Information Regulator (South Africa) at enquiries@inforegulator.org.za.",
       ],
     ],
   },
@@ -72,7 +72,7 @@ const documents = {
     sections: [
       [
         "About StreetPlate",
-        "StreetPlate is operated by [Company legal name], registration number [CIPC registration number], with its registered address at [registered physical address] and can be contacted at [support email]. StreetPlate is a marketplace that connects customers with independent food vendors and independent delivery partners; StreetPlate does not itself prepare food or make deliveries.",
+        "StreetPlate is operated by KulaConnect, registration number K2025921054, with its registered address at G1031 Bhejane Road, KwaMashu and can be contacted at support@gmail.com. StreetPlate is a marketplace that connects customers with independent food vendors and independent delivery partners; StreetPlate does not itself prepare food or make deliveries.",
       ],
       [
         "Acceptance of these terms",
@@ -112,7 +112,7 @@ const documents = {
       ],
       [
         "Intellectual property",
-        "The StreetPlate name, logo and website content are owned by [Company legal name] or its licensors and may not be used without permission.",
+        "The StreetPlate name, logo and website content are owned by KulaConnect or its licensors and may not be used without permission.",
       ],
       [
         "Liability",
@@ -120,7 +120,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with our support team at [support email]; unresolved consumer disputes may be referred to the National Consumer Commission or the courts of South Africa.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with our support team at support@gmail.com; unresolved consumer disputes may be referred to the National Consumer Commission or the courts of South Africa.",
       ],
       [
         "Changes to these terms",
@@ -178,7 +178,7 @@ const documents = {
       ],
       [
         "Food that is unsafe, incorrect or not as described",
-        "If your order arrives unsafe, materially different from what was ordered, or otherwise not of the quality you're entitled to expect, you may request a refund or replacement in line with sections 55 and 56 of the Consumer Protection Act. Report the issue through the app or to [support email] as soon as possible, ideally within 24 hours of delivery.",
+        "If your order arrives unsafe, materially different from what was ordered, or otherwise not of the quality you're entitled to expect, you may request a refund or replacement in line with sections 55 and 56 of the Consumer Protection Act. Report the issue through the app or to support@gmail.com as soon as possible, ideally within 24 hours of delivery.",
       ],
       [
         "Delivery issues",
@@ -186,11 +186,11 @@ const documents = {
       ],
       [
         "How refunds are processed",
-        "Refunds are verified against our payment and order records before being approved and are returned to your original payment method. Processing times depend on PayFast and your bank, and are typically completed within [refund processing timeframe] business days of approval.",
+        "Refunds are verified against our payment and order records before being approved and are returned to your original payment method. Processing times depend on PayFast and your bank, and are typically completed within 24 to 72 hours of approval.",
       ],
       [
         "Raising a dispute",
-        "If you're not satisfied with the outcome of a refund request, contact [support email] to escalate it. If we cannot resolve your complaint directly, you may refer it to the Consumer Goods and Services Ombud or the National Consumer Commission.",
+        "If you're not satisfied with the outcome of a refund request, contact support@gmail.com to escalate it. If we cannot resolve your complaint directly, you may refer it to the Consumer Goods and Services Ombud or the National Consumer Commission.",
       ],
     ],
   },
@@ -217,7 +217,7 @@ const documents = {
       ],
       [
         "Fees, commission and settlement",
-        "StreetPlate charges a commission of [vendor commission percentage] on completed orders. Settlement of amounts owed to you occurs on [settlement schedule], less commission and any applicable deductions, details of which are available in your vendor dashboard.",
+        "StreetPlate charges a commission of 30% on completed orders. Settlement of amounts owed to you occurs every 7 days, less commission and any applicable deductions, details of which are available in your vendor dashboard.",
       ],
       [
         "Payment processing and disputes",
@@ -237,7 +237,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with [support email] before any other proceedings are pursued.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@gmail.com before any other proceedings are pursued.",
       ],
       [
         "Changes to these terms",
@@ -268,7 +268,7 @@ const documents = {
       ],
       [
         "Earnings and payment",
-        "Earnings depend on demand, availability, accepted offers and completed deliveries; StreetPlate does not guarantee any minimum level of earnings. Payment is calculated as described in your driver dashboard and paid out on [payout schedule].",
+        "Earnings depend on demand, availability, accepted offers and completed deliveries; StreetPlate does not guarantee any minimum level of earnings. Payment is calculated as described in your driver dashboard and paid out at the end of each week.",
       ],
       [
         "Your location information",
@@ -288,7 +288,7 @@ const documents = {
       ],
       [
         "Governing law and disputes",
-        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with [support email] before any other proceedings are pursued.",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with support@gmail.com before any other proceedings are pursued.",
       ],
       [
         "Changes to these terms",

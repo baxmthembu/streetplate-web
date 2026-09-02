@@ -1,0 +1,10 @@
+.agents/
+.codex/
+.cursor/
+.next/
+.next-dev.*.log
+coverage/
+node_modules/
+playwright-report/
+skills-lock.json
+test-results/

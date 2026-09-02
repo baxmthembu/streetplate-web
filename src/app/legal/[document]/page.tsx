@@ -5,114 +5,294 @@ const documents = {
   privacy: {
     title: "Privacy Policy",
     intro:
-      "This draft explains how StreetPlate intends to handle personal information across customer, vendor and driver journeys.",
+      "This policy explains how StreetPlate collects, uses, shares and protects personal information across customer, vendor and driver journeys, in line with the Protection of Personal Information Act 4 of 2013 (POPIA).",
     sections: [
       [
-        "Information we use",
-        "Account details, contact information, delivery addresses, order activity and support communications may be processed to provide the service.",
+        "Who is responsible for your information",
+        "StreetPlate ([Company legal name], registration number [CIPC registration number], registered address [registered physical address]) is the responsible party for personal information processed through this website and the customer, vendor and driver apps.",
+      ],
+      [
+        "Information we collect",
+        "We process account and contact details, delivery addresses, order and payment history (not full card numbers), vendor business information, driver vehicle and licence details, device and usage data, and support communications you send us.",
+      ],
+      [
+        "How we collect it",
+        "Most information is provided directly by you when you register, place an order, or contact support. Some is collected automatically, such as device information and, with your permission, precise location.",
+      ],
+      [
+        "Why we process your information",
+        "We process personal information to perform our contract with you (creating an account, fulfilling orders, processing payments), to meet legal obligations (such as tax and consumer-protection record-keeping), and for legitimate interests such as fraud prevention and service security, as permitted under section 11 of POPIA.",
       ],
       [
         "Location information",
-        "Precise location should only be used with clear permission for delivery, vendor discovery and active order tracking.",
+        "Precise location is only collected with your permission and is used for delivery address confirmation, showing nearby vendors, and live order tracking. You can withdraw location permission at any time in your device settings, which may limit some features.",
       ],
       [
-        "Your choices",
-        "The final policy will describe access, correction, objection, portability and deletion request processes.",
+        "Sharing your information",
+        "We share the minimum necessary information with the vendor and driver assigned to your order, our payment processor (PayFast) to process payment, and infrastructure and communication providers who process data on our behalf (hosting, database, image storage and email delivery). These providers act as operators under POPIA and are contractually required to protect your information and use it only as instructed.",
+      ],
+      [
+        "Cross-border transfers",
+        "Some of our service providers process information on servers located outside South Africa. Where this occurs, we take reasonable steps, as required by section 72 of POPIA, to ensure the recipient is subject to a comparable level of data protection before any transfer.",
+      ],
+      [
+        "How long we keep your information",
+        "We retain personal information only for as long as necessary to provide the service, meet legal and tax record-keeping obligations, and resolve disputes, after which it is deleted or anonymised.",
+      ],
+      [
+        "Security safeguards",
+        "We apply reasonable technical and organisational measures, including encryption in transit, access controls and monitoring, to protect personal information against loss, unauthorised access, and unlawful processing, as required by section 19 of POPIA.",
+      ],
+      [
+        "Your rights",
+        "Under sections 23 to 25 of POPIA, you may request access to the personal information we hold about you, request correction or deletion of inaccurate or unlawfully held information, and object to processing carried out on the basis of legitimate interest. You may also object to and opt out of direct marketing at any time.",
+      ],
+      [
+        "Children",
+        "StreetPlate is not intended for use by anyone under 18. We do not knowingly collect personal information from children without the consent required by section 35 of POPIA.",
+      ],
+      [
+        "Direct marketing",
+        "We will only send direct marketing communications with your prior opt-in consent, as required by section 69 of POPIA, and you can withdraw that consent at any time.",
+      ],
+      [
+        "Changes to this policy",
+        "We may update this policy from time to time. Material changes will be indicated by an updated effective date, and significant changes affecting your rights will be actively communicated.",
+      ],
+      [
+        "Contact us and the Information Regulator",
+        "For any question about this policy or to exercise your rights, contact our Information Officer at [Information Officer name and email]. If you believe your information has been mishandled, you may also lodge a complaint with the Information Regulator (South Africa) at enquiries@inforegulator.org.za.",
       ],
     ],
   },
   terms: {
     title: "Terms and Conditions",
     intro:
-      "These draft terms outline the intended relationship between StreetPlate and website users.",
+      "These terms govern your use of the StreetPlate website and apps as a customer, and are written to meet the disclosure requirements of the Electronic Communications and Transactions Act 25 of 2002 (ECTA) and the Consumer Protection Act 68 of 2008 (CPA).",
     sections: [
       [
-        "Using StreetPlate",
-        "Customers must provide accurate delivery and contact information and use the platform lawfully.",
+        "About StreetPlate",
+        "StreetPlate is operated by [Company legal name], registration number [CIPC registration number], with its registered address at [registered physical address] and can be contacted at [support email]. StreetPlate is a marketplace that connects customers with independent food vendors and independent delivery partners; StreetPlate does not itself prepare food or make deliveries.",
       ],
       [
-        "Orders and availability",
-        "Vendor availability, preparation times and delivery estimates can change. Final terms must define when an order becomes binding.",
+        "Acceptance of these terms",
+        "By creating an account or placing an order, you agree to be bound by these terms. If you do not agree, do not use StreetPlate.",
       ],
       [
-        "Payments",
-        "Payment status must be confirmed by trusted server-side records, not browser redirects.",
+        "Eligibility",
+        "You must be at least 18 years old and have the legal capacity to enter into a binding contract to use StreetPlate.",
+      ],
+      [
+        "Your account",
+        "You are responsible for the accuracy of your account information and for keeping your login credentials secure. We may suspend or terminate accounts used in breach of these terms or applicable law.",
+      ],
+      [
+        "Orders and when a contract is formed",
+        "A binding order is only formed once the vendor accepts it and payment is confirmed by our server-side payment records. Listed prices, availability and delivery estimates may change until an order is confirmed.",
+      ],
+      [
+        "Pricing and payment",
+        "All prices are shown in South African Rand. Payments are processed by PayFast, a licensed South African payment gateway; StreetPlate does not store your full card details.",
+      ],
+      [
+        "Delivery",
+        "Delivery times shown are estimates only and are not guaranteed, as they depend on vendor preparation time, driver availability and factors outside our control.",
+      ],
+      [
+        "Cancellations and refunds",
+        "Cancellation and refund eligibility is set out in our Refund and Cancellation Policy, which forms part of these terms.",
+      ],
+      [
+        "Your rights under the Consumer Protection Act",
+        "Nothing in these terms limits your rights under the CPA, including your right to receive food of good quality that is reasonably suitable for its intended purpose, and your right to lodge a complaint with the National Consumer Commission or an accredited industry ombud if a dispute cannot be resolved directly with us.",
+      ],
+      [
+        "Prohibited conduct",
+        "You may not use StreetPlate for any unlawful purpose, to submit false information, or to interfere with the security or operation of the platform.",
+      ],
+      [
+        "Intellectual property",
+        "The StreetPlate name, logo and website content are owned by [Company legal name] or its licensors and may not be used without permission.",
+      ],
+      [
+        "Liability",
+        "To the maximum extent permitted by law, StreetPlate's liability is limited as set out in this section; however, nothing in these terms excludes or limits any liability that cannot lawfully be excluded or limited under the Consumer Protection Act.",
+      ],
+      [
+        "Governing law and disputes",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with our support team at [support email]; unresolved consumer disputes may be referred to the National Consumer Commission or the courts of South Africa.",
+      ],
+      [
+        "Changes to these terms",
+        "We may update these terms from time to time. Continued use of StreetPlate after an update constitutes acceptance of the revised terms.",
       ],
     ],
   },
   cookies: {
     title: "Cookie Policy",
     intro:
-      "This draft explains the limited cookies needed for secure sessions and core website operation.",
+      "This policy explains the cookies StreetPlate uses, why we use them, and your choices, in line with POPIA and the ECTA's requirements for automated data collection.",
     sections: [
       [
+        "What are cookies",
+        "Cookies are small text files stored on your device that help websites function and remember information between visits.",
+      ],
+      [
         "Essential cookies",
-        "Supabase SSR authentication uses secure session cookies so signed-in pages can verify the current user.",
+        "We use secure session cookies, provided by our authentication system, so that signed-in pages can verify who you are. These are necessary for the service to work and cannot be switched off without losing the ability to sign in.",
       ],
       [
-        "Preferences",
-        "Optional preferences should be stored only with a clear purpose and appropriate consent.",
+        "Functional and preference cookies",
+        "Any cookies used to remember your preferences are only set with a clear purpose and, where required, your consent.",
       ],
       [
-        "Analytics",
-        "No non-essential analytics or advertising cookies should be enabled before consent requirements are implemented.",
+        "Analytics and advertising",
+        "StreetPlate does not currently use non-essential analytics or advertising cookies. If this changes, we will request your opt-in consent before any such cookie is set, as required by POPIA.",
+      ],
+      [
+        "Third-party cookies",
+        "Some features, such as address search, rely on third-party services (for example Google Maps) that may set their own cookies when in use, governed by that provider's own policy.",
+      ],
+      [
+        "Managing cookies",
+        "You can control or delete cookies through your browser settings. Disabling essential cookies will prevent you from signing in and placing orders.",
+      ],
+      [
+        "Changes to this policy",
+        "We may update this policy as the cookies we use change. The current version always applies to your use of the site.",
       ],
     ],
   },
   refunds: {
     title: "Refund and Cancellation Policy",
     intro:
-      "This draft describes the topics a final reviewed policy must cover without promising automatic outcomes.",
+      "This policy explains when an order can be cancelled and how refunds are handled, in a manner consistent with your rights under the Consumer Protection Act 68 of 2008.",
     sections: [
       [
-        "Cancellations",
-        "Eligibility may depend on vendor acceptance, food preparation and driver assignment status.",
+        "Cancelling before vendor acceptance",
+        "You may cancel an order free of charge at any time before the vendor accepts it.",
       ],
       [
-        "Refund review",
-        "Refunds should be tied to verified payment and order records and reviewed under the final approved policy.",
+        "Cancelling after vendor acceptance",
+        "Once a vendor accepts your order and begins preparation, cancellation may no longer be possible. Where cancellation is still possible, any refund will account for costs already incurred by the vendor or driver.",
       ],
       [
-        "Support",
-        "The production site must provide a clear channel for customers to raise order and payment concerns.",
+        "Food that is unsafe, incorrect or not as described",
+        "If your order arrives unsafe, materially different from what was ordered, or otherwise not of the quality you're entitled to expect, you may request a refund or replacement in line with sections 55 and 56 of the Consumer Protection Act. Report the issue through the app or to [support email] as soon as possible, ideally within 24 hours of delivery.",
+      ],
+      [
+        "Delivery issues",
+        "If your order is not delivered, or is delivered significantly late through no fault of your own, you may be entitled to a full or partial refund.",
+      ],
+      [
+        "How refunds are processed",
+        "Refunds are verified against our payment and order records before being approved and are returned to your original payment method. Processing times depend on PayFast and your bank, and are typically completed within [refund processing timeframe] business days of approval.",
+      ],
+      [
+        "Raising a dispute",
+        "If you're not satisfied with the outcome of a refund request, contact [support email] to escalate it. If we cannot resolve your complaint directly, you may refer it to the Consumer Goods and Services Ombud or the National Consumer Commission.",
       ],
     ],
   },
   "vendor-terms": {
     title: "Vendor Terms",
     intro:
-      "These draft terms describe the intended responsibilities of independent food businesses using StreetPlate.",
+      "These terms set out the responsibilities of independent food businesses ('vendors') that list and sell food through StreetPlate.",
     sections: [
       [
-        "Food and business compliance",
-        "Vendors remain responsible for lawful operation, food safety, accurate menus and required registrations.",
+        "Your role",
+        "You operate your business independently of StreetPlate. Nothing in these terms creates an employment, agency, partnership or joint-venture relationship between you and StreetPlate.",
       ],
       [
-        "Orders and availability",
-        "Vendors must keep availability current and respond to paid orders through the approved operational application.",
+        "Registration and compliance",
+        "You warrant that your business is lawfully registered (as a company, sole proprietor or otherwise), holds all required municipal health and food-handling permits, and complies with the Foodstuffs, Cosmetics and Disinfectants Act 54 of 1972, applicable municipal by-laws, and your own tax obligations to SARS.",
       ],
       [
-        "Payments and fees",
-        "Final commercial terms must define commissions, settlement timing, deductions and disputes before activation.",
+        "Menu accuracy and food safety",
+        "You are responsible for accurate menu descriptions and pricing, disclosing known allergens where practical, and preparing food safely and hygienically at all times.",
+      ],
+      [
+        "Order fulfilment",
+        "You must keep your availability and preparation times current in the app, and accept or decline orders promptly. You are responsible for having orders ready within the time you indicate.",
+      ],
+      [
+        "Fees, commission and settlement",
+        "StreetPlate charges a commission of [vendor commission percentage] on completed orders. Settlement of amounts owed to you occurs on [settlement schedule], less commission and any applicable deductions, details of which are available in your vendor dashboard.",
+      ],
+      [
+        "Payment processing and disputes",
+        "Customer payments are processed through PayFast. If a customer payment is disputed or reversed after you have been paid, StreetPlate may recover the corresponding amount from your future settlements, subject to our dispute review process.",
+      ],
+      [
+        "Protecting customer information",
+        "Where you receive customer personal information (such as delivery details) to fulfil an order, you act as an operator under POPIA: you may only use that information to fulfil the order, must keep it secure, and must notify StreetPlate promptly of any suspected data breach.",
+      ],
+      [
+        "Suspension and termination",
+        "We may suspend or terminate your access to StreetPlate for breach of these terms, repeated food-safety complaints, fraud, or as required by law, and will give notice where reasonably possible.",
+      ],
+      [
+        "Independent contractor status",
+        "You are an independent business, not an employee of StreetPlate. The Basic Conditions of Employment Act and Labour Relations Act do not apply to your relationship with StreetPlate, and you remain responsible for your own tax, UIF and any staff you employ.",
+      ],
+      [
+        "Governing law and disputes",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with [support email] before any other proceedings are pursued.",
+      ],
+      [
+        "Changes to these terms",
+        "We may update these terms from time to time and will provide reasonable notice of material changes through the vendor dashboard.",
       ],
     ],
   },
   "driver-terms": {
     title: "Delivery Partner Terms",
     intro:
-      "These draft terms outline the intended independent delivery-partner relationship.",
+      "These terms set out the responsibilities of independent delivery partners ('drivers') who accept and complete deliveries through StreetPlate.",
     sections: [
       [
-        "Eligibility",
-        "Drivers must provide accurate identity, licence and vehicle information where required.",
+        "Your role",
+        "You provide delivery services as an independent contractor. Nothing in these terms creates an employment, agency or partnership relationship between you and StreetPlate.",
+      ],
+      [
+        "Eligibility and documentation",
+        "You must hold a valid driver's licence appropriate to your vehicle, provide accurate vehicle registration and roadworthiness information, and comply with the National Road Traffic Act 93 of 1996 at all times.",
       ],
       [
         "Safety and conduct",
-        "Delivery partners must follow road laws, food-handling requirements and customer-safety standards.",
+        "You must obey all road traffic laws, handle food hygienically while in transit, and treat customers and vendors with courtesy and respect.",
       ],
       [
-        "Earnings",
-        "Earnings vary by accepted and completed deliveries; no minimum earnings are promised by this draft.",
+        "Accepting and completing deliveries",
+        "You choose which delivery offers to accept. While an order is active, StreetPlate shares your live location with the relevant customer and vendor for dispatch and safety purposes, with your consent.",
+      ],
+      [
+        "Earnings and payment",
+        "Earnings depend on demand, availability, accepted offers and completed deliveries; StreetPlate does not guarantee any minimum level of earnings. Payment is calculated as described in your driver dashboard and paid out on [payout schedule].",
+      ],
+      [
+        "Your location information",
+        "Location data collected while you are online or on an active delivery is processed for dispatch, safety and support purposes under POPIA, and is retained only as long as necessary for those purposes.",
+      ],
+      [
+        "Insurance and liability",
+        "You are responsible for maintaining appropriate insurance for your own vehicle. [StreetPlate's position on liability for accidents or incidents during a delivery requires confirmation by qualified legal counsel before publication.]",
+      ],
+      [
+        "Suspension and termination",
+        "We may suspend or terminate your access to StreetPlate for breach of these terms, safety concerns, fraud, or as required by law, and will give notice where reasonably possible.",
+      ],
+      [
+        "Independent contractor status",
+        "You are an independent contractor, not an employee of StreetPlate. The Basic Conditions of Employment Act and Labour Relations Act do not apply to your relationship with StreetPlate, and you remain responsible for your own tax and UIF obligations.",
+      ],
+      [
+        "Governing law and disputes",
+        "These terms are governed by the law of the Republic of South Africa. Disputes should first be raised with [support email] before any other proceedings are pursued.",
+      ],
+      [
+        "Changes to these terms",
+        "We may update these terms from time to time and will provide reasonable notice of material changes through the driver app.",
       ],
     ],
   },
@@ -155,11 +335,6 @@ export default async function LegalPage({ params }: Props) {
             <p>{body}</p>
           </section>
         ))}
-        <h2>Privacy contact</h2>
-        <p>
-          A production privacy contact address and data-request process must be
-          confirmed before launch.
-        </p>
       </article>
     </>
   );

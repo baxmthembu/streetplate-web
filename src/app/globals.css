@@ -1992,6 +1992,13 @@ summary {
   margin-top: 1.2rem;
 }
 
+.auth-privacy-note {
+  color: var(--muted);
+  font-size: var(--type-body-small-size);
+  line-height: 1.5;
+  margin-top: 1.2rem;
+}
+
 .auth-note {
   background: var(--charcoal);
   border-radius: 0 24px 24px 0;

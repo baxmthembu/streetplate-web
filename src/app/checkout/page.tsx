@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { CheckoutForm } from "@/components/checkout-form";
@@ -31,7 +33,11 @@ export default async function CheckoutPage() {
   }
   return (
     <section className="shell content-page">
-      <div className="section-heading compact-heading">
+      <div className="section-heading compact-heading checkout-header">
+        <Link className="checkout-back-link" href="/cart">
+          <ChevronLeft size={18} aria-hidden="true" />
+          Back to cart
+        </Link>
         <div>
           <p className="eyebrow">Checkout</p>
           <h1>Confirm your order</h1>

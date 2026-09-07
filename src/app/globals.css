@@ -98,6 +98,7 @@
   --muted: var(--text-secondary);
   --line: var(--border);
   --soft: var(--surface);
+  --surface-soft: var(--surface-alt);
   --cream: #fff7ed;
   --white: var(--background);
   --green: var(--success);
@@ -2944,6 +2945,10 @@ summary {
 .field-group {
   display: grid;
   gap: 0.4rem;
+}
+
+.checkout-address-field {
+  position: relative;
 }
 
 .field-group > span {

@@ -511,7 +511,7 @@ export async function requestPasswordReset(
   try {
     const supabase = await createClient();
     await supabase?.auth.resetPasswordForEmail(parsed.data, {
-      redirectTo: `${siteUrl}/reset-password`,
+      redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent("/reset-password")}`,
       captchaToken: turnstileToken.data,
     });
   } catch {

@@ -74,6 +74,9 @@ export async function verifyTurnstile(
     });
 
     if (!response.ok) {
+      console.error(
+        `verifyTurnstile: siteverify HTTP ${response.status} for action=${expectedAction}`,
+      );
       return {
         success: false,
         message: "Security verification failed. Please try again.",
@@ -82,6 +85,10 @@ export async function verifyTurnstile(
 
     const parsed = siteverifyResponseSchema.safeParse(await response.json());
     if (!parsed.success) {
+      console.error(
+        `verifyTurnstile: siteverify response failed schema validation for action=${expectedAction}`,
+        parsed.error.issues,
+      );
       return {
         success: false,
         message: "Security verification failed. Please try again.",
@@ -92,6 +99,10 @@ export async function verifyTurnstile(
       const expiredOrDuplicate = parsed.data["error-codes"]?.includes(
         "timeout-or-duplicate",
       );
+      console.error(
+        `verifyTurnstile: siteverify rejected token for action=${expectedAction}`,
+        parsed.data["error-codes"],
+      );
       return {
         success: false,
         message: expiredOrDuplicate
@@ -101,6 +112,9 @@ export async function verifyTurnstile(
     }
 
     if (parsed.data.action !== expectedAction) {
+      console.error(
+        `verifyTurnstile: action mismatch, expected "${expectedAction}" got "${parsed.data.action}"`,
+      );
       return {
         success: false,
         message: "Security verification failed. Please try again.",
@@ -111,6 +125,9 @@ export async function verifyTurnstile(
       !parsed.data.hostname ||
       !allowedHostnames.includes(parsed.data.hostname.toLowerCase())
     ) {
+      console.error(
+        `verifyTurnstile: hostname "${parsed.data.hostname}" not in allowlist [${allowedHostnames.join(", ")}] for action=${expectedAction}`,
+      );
       return {
         success: false,
         message: "Security verification failed. Please try again.",
@@ -118,7 +135,11 @@ export async function verifyTurnstile(
     }
 
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error(
+      `verifyTurnstile: siteverify request threw for action=${expectedAction}`,
+      error,
+    );
     return {
       success: false,
       message: "Security verification is temporarily unavailable.",

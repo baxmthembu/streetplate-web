@@ -399,9 +399,13 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
                       await loadGeocodingLibrary(apiKey);
                       const geocoder = new google.maps.Geocoder();
                       const response = await geocoder.geocode({
-                        location: { lat: coords.latitude, lng: coords.longitude },
+                        location: {
+                          lat: coords.latitude,
+                          lng: coords.longitude,
+                        },
                       });
-                      address = response.results[0]?.formatted_address ?? address;
+                      address =
+                        response.results[0]?.formatted_address ?? address;
                     } catch {
                       // Coordinates are still useful when reverse geocoding is unavailable.
                     }
@@ -414,13 +418,19 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
                     latitude,
                     longitude,
                   }));
-                  setLocationMessage("Location added. Confirm the address above.");
+                  setLocationMessage(
+                    "Location added. Confirm the address above.",
+                  );
                 },
                 () =>
                   setLocationMessage(
                     "Location permission was denied. Enter the address manually.",
                   ),
-                { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
+                {
+                  enableHighAccuracy: false,
+                  timeout: 10000,
+                  maximumAge: 300000,
+                },
               );
             }}
           >
@@ -465,7 +475,7 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
                 <button
                   key={amount}
                   type="button"
-                  className={`tip-chip${active ? " tip-chip-active" : ""}`}
+                  className={`tip-chip ${active ? "tip-chip-active" : ""}`}
                   aria-pressed={active}
                   onClick={() => {
                     setTipMode("preset");
@@ -478,7 +488,7 @@ export function CheckoutForm({ addresses }: { addresses: SavedAddress[] }) {
             })}
             <button
               type="button"
-              className={`tip-chip${tipMode === "custom" ? " tip-chip-active" : ""}`}
+              className={`tip-chip ${tipMode === "custom" ? "tip-chip-active" : ""}`}
               aria-pressed={tipMode === "custom"}
               onClick={() => setTipMode("custom")}
             >

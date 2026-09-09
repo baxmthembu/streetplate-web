@@ -2730,8 +2730,11 @@ summary {
   }
 
   .auth-food-mosaic {
-    border-radius: 0 0 20px 20px;
-    grid-template-rows: repeat(3, 130px);
+    display: none;
+  }
+
+  .auth-page:has(.auth-food-mosaic) .auth-card {
+    border-radius: 20px;
   }
 
   .join-choice-grid,

@@ -18,7 +18,7 @@ vi.mock("@/components/demo-notice", () => ({ DemoNotice: () => null }));
 vi.mock("@/components/meal-card", () => ({ MealCard: () => null }));
 vi.mock("@/components/vendor-card", () => ({ VendorCard: () => null }));
 
-import Home from "@/app/page";
+import Home from "@/app/(home)/page";
 
 describe("Home", () => {
   it("sends saved-address users through sign-in and back to their account", async () => {

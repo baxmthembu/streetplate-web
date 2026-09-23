@@ -4477,6 +4477,68 @@ summary {
   width: 100px;
 }
 
+.skeleton-icon {
+  border-radius: 50%;
+  height: 21px;
+  width: 21px;
+}
+
+.skeleton-metric-grid {
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.skeleton-metric-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: grid;
+  gap: var(--space-s);
+  padding: 1.1rem;
+}
+
+.skeleton-progress-steps {
+  display: flex;
+  gap: var(--space-m);
+  justify-content: space-between;
+}
+
+.skeleton-progress-step {
+  display: grid;
+  flex: 1;
+  gap: var(--space-s);
+  justify-items: center;
+}
+
+.skeleton-two-col {
+  align-items: center;
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+
+.skeleton-hero-art {
+  border-radius: 24px;
+  height: 320px;
+  width: 100%;
+}
+
+.skeleton-row-list {
+  display: grid;
+  gap: var(--space-m);
+}
+
+.skeleton-row {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: 44px minmax(0, 1fr) 90px;
+  padding: 1rem 1.2rem;
+}
+
 @media (max-width: 980px) {
   .skeleton-card-grid-three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4491,6 +4553,14 @@ summary {
   .skeleton-side-panel {
     height: 220px;
     position: static;
+  }
+
+  .skeleton-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skeleton-two-col {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -4520,6 +4590,18 @@ summary {
   .skeleton-account-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .skeleton-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-progress-steps {
+    flex-wrap: wrap;
+  }
+
+  .skeleton-row {
+    grid-template-columns: 36px minmax(0, 1fr);
   }
 }
 

@@ -6,10 +6,7 @@ export function formatRand(value: number): string {
   // and behaves identically in Node and every browser engine.
   const sign = value < 0 ? "-" : "";
   const [wholePart, decimalPart] = Math.abs(value).toFixed(2).split(".");
-  const groupedWholePart = wholePart.replace(
-    /\B(?=(\d{3})+(?!\d))/g,
-    " ",
-  );
+  const groupedWholePart = wholePart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   return `${sign}R ${groupedWholePart},${decimalPart}`;
 }
 

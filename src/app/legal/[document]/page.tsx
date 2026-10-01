@@ -319,16 +319,11 @@ export default async function LegalPage({ params }: Props) {
     <>
       <section className="page-hero compact-hero">
         <div className="shell">
-          <p className="eyebrow">Editable legal draft</p>
           <h1>{content.title}</h1>
           <p>{content.intro}</p>
         </div>
       </section>
       <article className="shell content-page content-narrow legal-copy">
-        <div className="legal-warning">
-          This is product-preparation copy, not legal advice. It requires review
-          by a qualified South African lawyer before publication.
-        </div>
         {content.sections.map(([title, body]) => (
           <section key={title}>
             <h2>{title}</h2>

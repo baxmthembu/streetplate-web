@@ -46,11 +46,11 @@ export function RecruitmentPage({
       >
         <div className="shell recruitment-grid">
           <div>
-            <p className="eyebrow">
+            {/*<p className="eyebrow">
               {isVendor
                 ? "Grow your food business"
                 : "Deliver in your community"}
-            </p>
+            </p>*/}
             <h1>{title}</h1>
             <p>{description}</p>
             <a href="#application" className="button button-dark">
@@ -80,7 +80,7 @@ export function RecruitmentPage({
       <section className="section shell">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Why StreetPlate</p>
+            {/*<p className="eyebrow">Why StreetPlate</p>*/}
             <h2>Built around local opportunity</h2>
           </div>
         </div>
@@ -114,7 +114,7 @@ export function RecruitmentPage({
       <section className="section section-tint">
         <div className="shell application-layout" id="application">
           <div>
-            <p className="eyebrow">Application journey</p>
+            {/*<p className="eyebrow">Application journey</p>*/}
             <h2>What to expect</h2>
             <ol>
               {steps.map((step, index) => (

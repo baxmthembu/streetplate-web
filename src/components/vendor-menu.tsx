@@ -23,7 +23,6 @@ export function VendorMenu({ meals }: { meals: Meal[] }) {
     <>
       <div className="menu-topbar">
         <div>
-          <p className="eyebrow">Made fresh</p>
           <h2>Menu</h2>
         </div>
         <label className="menu-search">

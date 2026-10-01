@@ -17,12 +17,6 @@ export default function ForgotPasswordPage() {
           <Link href="/sign-in">Back to sign in</Link>
         </div>
       </div>
-      <aside className="auth-note">
-        <strong>Private by design</strong>
-        <p>
-          StreetPlate does not reveal whether an email address is registered.
-        </p>
-      </aside>
     </section>
   );
 }

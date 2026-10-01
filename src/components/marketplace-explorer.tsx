@@ -409,7 +409,6 @@ export function MarketplaceExplorer({
         <div className="discover-results">
           <div className="results-bar">
             <div>
-              <p className="eyebrow">Available choices</p>
               <h2>
                 {filteredVendors.length}{" "}
                 {filteredVendors.length === 1 ? "vendor" : "vendors"}

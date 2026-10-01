@@ -50,7 +50,7 @@ export default async function DiscoverPage({
     <>
       <section className="page-hero">
         <div className="shell">
-          <p className="eyebrow">Find food near you</p>
+          {/*<p className="eyebrow">Find food near you</p>*/}
           <h1>Your neighbourhood menu</h1>
           <p>
             Search local vendors and meals. Set an address to see which vendors
